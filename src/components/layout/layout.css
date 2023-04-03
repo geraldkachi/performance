@@ -1,0 +1,32 @@
+.layout {
+    /* color: #668A99; */
+    overflow: hidden;
+}
+
+.layout__content {
+    /* padding-left: 240px; */
+    padding-top: 30px;
+    min-height: 100vh;
+    flex: 1;
+
+}
+
+.layout__content-main {
+    /* padding: 20px; this is very important but becos of the design changes would have to comment it */
+    /* padding: 20px;  */
+    flex: 1;
+    width: 100%;
+    /* background-color: aqua; */
+}
+
+@media only screen and (max-width: 1300px) {
+    .layout__content {
+        /* padding-left: 240px; */
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .layout__content {
+        /* padding-left: 240px; */
+    }
+}
