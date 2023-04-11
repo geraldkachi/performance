@@ -12,7 +12,6 @@ const NewTask = ({ setStateNewTask }: Props) => {
 
     const onFinish = (e: FormEvent) => {
       e.preventDefault()
-
     }
   return (
     <div className="my-5 sm:my-0">

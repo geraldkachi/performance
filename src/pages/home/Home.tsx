@@ -6,8 +6,13 @@ import Button from "../../components/button/Button";
 import { Table } from "antd";
 import NewStaff from "../../components/otherComponents/NewStaff";
 import NewTask from "../../components/otherComponents/NewTask";
-
-const columns = [
+interface columnsProps {
+  title: string
+  dataIndex: string,
+  width: string,
+  align: string
+}
+const columns: columnsProps[] = [
   {
     title: 'Staff Name',
     dataIndex: 'name',
@@ -149,15 +154,44 @@ const Home = () => {
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
 
   const state = {
-     plotOptions: {
-    bar: {
-      horizontal: true, //horizontal bar chart
-    },
-  },
+
     options: {
+    responsive: [{
+      breakpoint: 1000,
+      yaxis: {
+        categories: [
+          "Gerald",
+          "Kingsley",
+          "Ope",
+          "Dare",
+          "Akan",
+          "Prince",
+          "Shaguy",
+          "Tolulope",
+
+        ],
+      },
+      options: {
+        plotOptions: {
+          bar: {
+            horizontal: true
+          }
+        }
+      }
+    }],
+      plotOptions: {
+        bar: {
+          // horizontal: true, //horizontal bar chart
+          horizontal: false, //horizontal bar chart
+        },
+      },
       chart: {
         id: "basic-bar",
         width: '100%',
+        animations: {
+          enabled: false, //no animations
+          speed: 100,
+        },
       },
       colors: ["#2B8572"],
       dataLabels: {
@@ -186,6 +220,20 @@ const Home = () => {
         data: [20, 30, 40, 20, 100, 60, 70, 54],
       },
     ],
+    // responsive: [
+    //   {
+    //     breakpoint: 480,
+    //     options: {
+    //       chart: {
+    //         width: 200
+    //       },
+    //       legend: {
+    //         position: "bottom"
+    //       }
+    //     }
+    //   }
+    // ]
+
   };
 
 
@@ -198,23 +246,24 @@ const Home = () => {
       <div className="mt-5 flex items-center justify-between">
         <p className=" text-3xl bg-[##141C1F]">Performance Metric</p>
 
-        <Button className="cursor-pointer text-center rounded-lg mt-5" title="Assign Task" onClick={() => setStateNewTask(true) } />
+        <Button className="cursor-pointer text-center rounded-lg mt-5" title="Assign Task" onClick={() => setStateNewTask(true)} />
       </div>
 
       <div className="mt-5 flex items-center justify-between">
         <Button variant="outline" className="cursor-pointer hover:bg-[#f6fafa] px-14 py-4 my-5 rounded-lg bg-[#ffffff] text-[#2B8572] border border-[#2B8572]" type="submit" title="Add New Staff" onClick={() => setStateNewStaff(true)} />
       </div>
 
-      <div style={{ width: '100%', display: 'flex' }} className="w-full flex flex-1 mt-10 overflow-x-auto">
+      {/* <div style={{ width: '100%', display: 'flex' }} className="w-full flex flex-1 mt-10 overflow-x-auto"> */}
         <Chart
           options={state.options}
           series={state.series}
+
           type="bar"
-          width="400%"
-          height={'200%'}
+          width="100%"
+          height={'40%'}
 
         />
-      </div>
+      {/* </div> */}
 
       <div className="mt-10 mb-20  overflow-x-auto">
         <Table
@@ -238,16 +287,16 @@ const Home = () => {
           pagination={false}
           columns={columns}
           dataSource={candidature}
-          style={{ marginTop: '20px', padding:'20px', }}
+          style={{ marginTop: '20px', padding: '20px', }}
         />
       </div>
 
       <Modal show={stateNewTask} closeModal={setStateNewTask}>
-        <NewTask {...{setStateNewTask}} />
+        <NewTask {...{ setStateNewTask }} />
       </Modal>
 
       <Modal show={stateNewStaff} closeModal={setStateNewStaff}>
-        <NewStaff {...{setStateNewStaff}} />
+        <NewStaff {...{ setStateNewStaff }} />
       </Modal>
     </div>
   )

@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ToastContainer } from 'react-toastify';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ProtectedRoutes } from './routers';
-import { Layout,  } from './components';
+import { Layout, } from './components';
 import Staff from './pages/staff/Staff';
 import StaffDetail from './pages/staff-detail/StaffDetail';
 import Task from './pages/task/Task';
@@ -13,6 +13,8 @@ import HistoryDetail from './pages/history-detail/HistoryDetail';
 import StandUp from './pages/stand-up/StandUp';
 import Home from './pages/home/Home';
 import StandUpDetail from './pages/standUp-detail/StandUpDetail';
+import Login from './pages/login/Login';
+import ResetPassword from './pages/reset-password/ResetPassword';
 
 const App: React.FC = () => {
   const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
@@ -39,20 +41,24 @@ const App: React.FC = () => {
         <ToastContainer />
         <Suspense fallback={"Loading"}>
           <Routes>
-            {/* <Route element={<ProtectedRoutes />}> */}
-            <Route path="/" element={<Layout />} >
-              <Route path="/home" element={<Home />} />
-              <Route path="/staff" element={<Staff />} />
-              <Route path="/staff/:id" element={<StaffDetail />} />
-              <Route path="/task" element={<Task />} />
-              <Route path="/history" element={<History />} />
-              <Route path="/history/:id" element={<HistoryDetail />} />
-              <Route path="/stand-up" element={<StandUp />} />
-              <Route path="/stand-up/:id" element={<StandUpDetail />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/reset' element={<ResetPassword />} />
+
+            {/* Protected Roues */}
+            <Route element={<ProtectedRoutes />}>
+              <Route path='/' element={<Layout />} >
+                <Route index element={<Home />} />
+                <Route path="/staff" element={<Staff />} />
+                <Route path="/staff/:id" element={<StaffDetail />} />
+                <Route path="/task" element={<Task />} />
+                <Route path="/history" element={<History />} />
+                <Route path="/history/:id" element={<HistoryDetail />} />
+                <Route path="/stand-up" element={<StandUp />} />
+                <Route path="/stand-up/:id" element={<StandUpDetail />} />
+              </Route>
             </Route>
-            {/* </Route> */}
             {/* 404 page */}
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </Suspense>
 
@@ -62,3 +68,9 @@ const App: React.FC = () => {
 }
 
 export default App
+// const sentence = ['Hello ', 'my ', 'is ', 'Gerald ']
+// for (let i = 0; i < sentence.length; i++) {
+//   const element = sentence[i];
+//   const elementOptize = +sentence[i] + ' ';
+//   console.log(elementOptize, 'elementOptize')
+// }

@@ -24,11 +24,11 @@ const Sidebar = () => {
 
   const logout = () => {
     localStorage.clear();
-    navigate("/");
+    navigate("/login");
   };
 
   const routeList = [
-    { route: "/home", title: "Home" },
+    { route: "/", title: "Home" },
     { route: "/task", title: "Task" },
     { route: "/staff", title: "Staff" },
     { route: "/history", title: "History" },

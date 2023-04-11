@@ -1,4 +1,4 @@
-import React, { ReactElement, MouseEvent } from "react"
+import React, { ReactElement, MouseEvent, DetailedHTMLProps, InputHTMLAttributes } from "react"
 export interface IFormType {
     input?: string
     error?: string
@@ -61,7 +61,10 @@ const Input = ({
     minLength,
     TrailingIcon,
     searchIcon
-}: Iprops & InputIconProps) => {
+}: Iprops & InputIconProps & DetailedHTMLProps<
+InputHTMLAttributes<HTMLInputElement>,
+HTMLInputElement
+>) => {
 
     const input = (
         <input
