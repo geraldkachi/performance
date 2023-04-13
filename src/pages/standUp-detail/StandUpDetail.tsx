@@ -258,9 +258,9 @@ const StandUpDetail = () => {
 
       <div className="grid sm:grid-cols-2">
         <form onSubmit={onFinish}>
-          <Input label='Title' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Enter meeting title" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-          <Input label='12:15AM' value={email} onChange={e => setEmail(e.target.value)} placeholder='12:15AM' type="text" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-          <Input label='Participation' value={position} onChange={e => setPosition(e.target.value)} type="text" placeholder="Select staff " className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
+          <Input label='Title' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Enter meeting title" />
+          <Input label='12:15AM' value={email} onChange={e => setEmail(e.target.value)} placeholder='12:15AM' type="text" />
+          <Input label='Participation' value={position} onChange={e => setPosition(e.target.value)} type="text" placeholder="Select staff " />
 
 
           <div className="flex items-center">

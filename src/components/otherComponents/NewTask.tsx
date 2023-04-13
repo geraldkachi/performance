@@ -32,11 +32,11 @@ const NewTask = ({ setStateNewTask }: Props) => {
 
     </div>
     <form onSubmit={onFinish}>
-      <Input label='Task Name' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Task Name" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Dependant' value={email} onChange={e => setEmail(e.target.value)} placeholder='Dependant' type="text" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Start Date' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='End Date' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Description' value={email} onChange={e => setEmail(e.target.value)} placeholder='Description' type="text" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
+      <Input label='Task Name' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Task Name"  />
+      <Input label='Dependant' value={email} onChange={e => setEmail(e.target.value)} placeholder='Dependant' type="text"  />
+      <Input label='Start Date' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position"  />
+      <Input label='End Date' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position"  />
+      <Input label='Description' value={email} onChange={e => setEmail(e.target.value)} placeholder='Description' type="text"  />
 
 
       <div className="flex items-center justify-center">

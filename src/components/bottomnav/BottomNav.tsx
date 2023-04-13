@@ -14,7 +14,7 @@ const BottomNav = () => {
   const location = useLocation();
 
   const routeList = [
-    { route: "/", title: "Home" },
+    { route: "/home", title: "Home" },
     { route: "/task", title: "Task" },
     { route: "/staff", title: "Staff" },
     { route: "/history", title: "History" },

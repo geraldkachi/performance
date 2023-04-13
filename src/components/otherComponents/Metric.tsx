@@ -32,12 +32,12 @@ const Metric = ({}: Props) => {
 
     </div>
     <form onSubmit={onFinish}>
-      <Input label='Joins Early' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Task Name" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Present in Meeting' value={email} onChange={e => setEmail(e.target.value)} placeholder='Dependant' type="text" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Participation' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Attendance' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Task' value={email} onChange={e => setEmail(e.target.value)} placeholder='Description' type="text" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-      <Input label='Comments' value={email} onChange={e => setEmail(e.target.value)} placeholder='Description' type="text" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
+      <Input label='Joins Early' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Task Name" />
+      <Input label='Present in Meeting' value={email} onChange={e => setEmail(e.target.value)} placeholder='Dependant' type="text" />
+      <Input label='Participation' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position" />
+      <Input label='Attendance' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position" />
+      <Input label='Task' value={email} onChange={e => setEmail(e.target.value)} placeholder='Description' type="text" />
+      <Input label='Comments' value={email} onChange={e => setEmail(e.target.value)} placeholder='Description' type="text" />
 
 
       <div className="flex items-center justify-center">

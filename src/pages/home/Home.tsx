@@ -1,18 +1,19 @@
-import Chart from "react-apexcharts";
+import { Table } from "antd";
 import { useState } from "react";
 import { format } from "date-fns";
+import Chart from "react-apexcharts";
+
 import Modal from "../../components/modal/Modal";
 import Button from "../../components/button/Button";
-import { Table } from "antd";
 import NewStaff from "../../components/otherComponents/NewStaff";
 import NewTask from "../../components/otherComponents/NewTask";
 interface columnsProps {
   title: string
-  dataIndex: string,
   width: string,
   align: string
+  dataIndex: string,
 }
-const columns: columnsProps[] = [
+const columns: columnsProps[] | any = [
   {
     title: 'Staff Name',
     dataIndex: 'name',
@@ -51,7 +52,20 @@ const columns: columnsProps[] = [
   //   dataIndex: 'taco',
   //   render: (_, value) => <Button type="link" onClick={() => null} />
   //   // render: (_, value) => <Button type="link" icon={<EditOutlined />} onClick={() => this.showEditModal(value)}/>
-  // },
+  // }, // responsive: [
+  //   {
+  //     breakpoint: 480,
+  //     options: {
+  //       chart: {
+  //         width: 200
+  //       },
+  //       legend: {
+  //         position: "bottom"
+  //       }
+  //     }
+  //   }
+  // ]
+
 ];
 
 const candidature = [
@@ -156,33 +170,38 @@ const Home = () => {
   const state = {
 
     options: {
-    responsive: [{
-      breakpoint: 1000,
-      yaxis: {
-        categories: [
-          "Gerald",
-          "Kingsley",
-          "Ope",
-          "Dare",
-          "Akan",
-          "Prince",
-          "Shaguy",
-          "Tolulope",
-
-        ],
-      },
-      options: {
-        plotOptions: {
-          bar: {
-            horizontal: true
+      responsive: [{
+        breakpoint: 1000,
+        yaxis: {
+          categories: [
+            "Gerald",
+            "Kingsley",
+            "Ope",          // horizontal: true, //horizontal bar chart
+            "Dare",
+            "Akan",
+            "Prince",
+            "Shaguy",
+            "Tolulope",
+          ],
+        },
+        options: {
+          plotOptions: {
+            bar: {
+              horizontal: true,
+              endingShape: 'rounded',
+              borderRadius: 5,
+              // columnWidth: '100%'
+            }
           }
         }
-      }
-    }],
+      }],
+
       plotOptions: {
         bar: {
-          // horizontal: true, //horizontal bar chart
           horizontal: false, //horizontal bar chart
+          endingShape: 'rounded',
+          borderRadius: 10,
+          columnWidth: '50%'
         },
       },
       chart: {
@@ -195,7 +214,17 @@ const Home = () => {
       },
       colors: ["#2B8572"],
       dataLabels: {
-        enabled: false,
+        enabled: true,
+        position: 'top',
+        formatter: function (val: string) {
+          return val;
+        },
+        horizontal: true,
+        offsetX: 0,
+        style: {
+          fontSize: '10px',
+          colors: ['#ffffff']
+        }
       },
       grid: {
         show: false,
@@ -210,7 +239,6 @@ const Home = () => {
           "Prince",
           "Shaguy",
           "Tolulope",
-
         ],
       },
     },
@@ -220,20 +248,6 @@ const Home = () => {
         data: [20, 30, 40, 20, 100, 60, 70, 54],
       },
     ],
-    // responsive: [
-    //   {
-    //     breakpoint: 480,
-    //     options: {
-    //       chart: {
-    //         width: 200
-    //       },
-    //       legend: {
-    //         position: "bottom"
-    //       }
-    //     }
-    //   }
-    // ]
-
   };
 
 
@@ -253,17 +267,13 @@ const Home = () => {
         <Button variant="outline" className="cursor-pointer hover:bg-[#f6fafa] px-14 py-4 my-5 rounded-lg bg-[#ffffff] text-[#2B8572] border border-[#2B8572]" type="submit" title="Add New Staff" onClick={() => setStateNewStaff(true)} />
       </div>
 
-      {/* <div style={{ width: '100%', display: 'flex' }} className="w-full flex flex-1 mt-10 overflow-x-auto"> */}
-        <Chart
-          options={state.options}
-          series={state.series}
-
-          type="bar"
-          width="100%"
-          height={'40%'}
-
-        />
-      {/* </div> */}
+      <Chart
+        options={state.options}
+        series={state.series}
+        type="bar"
+        width="100%"
+        height={'40%'}
+      />
 
       <div className="mt-10 mb-20  overflow-x-auto">
         <Table

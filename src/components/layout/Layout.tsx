@@ -5,7 +5,8 @@ import BottomNav from '../bottomnav/BottomNav';
 import Sidebar from '../sidebar/Sidebar';
 
 import "./layout.css";
-
+const firstName = localStorage.getItem('firstName')
+const lastName = localStorage.getItem('lastName');
 
 const Layout = () => {
     return (
@@ -18,7 +19,7 @@ const Layout = () => {
                             <div className="flex gap-2">
 
                                 <div className="bg-[#F5F3F9] pr-3 py-2 flex gap-4 items-center rounded-lg px-2 whitespace-nowrap ">
-                                    <span className="text-sm font-semibold capitalize">{`Lord Daddy Gerald`}</span>
+                                    <span className="text-sm font-semibold capitalize">{`${lastName} ${firstName}`}</span>
                                     <ProfileIcon />
                                 </div>
                             </div>

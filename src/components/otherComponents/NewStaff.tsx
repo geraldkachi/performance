@@ -1,17 +1,68 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react"
+import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react"
 import Button from "../button/Button"
 import Input from "../input/Input"
+import { createStaff } from "../../server/base"
+import { useMutation } from "react-query"
+import { toast } from "react-toastify"
+import { CreateStaffType } from "../../../types"
+import * as yup from "yup";
+
+
+const firstName = localStorage.getItem('firstName') as string
+const lastName = localStorage.getItem('lastName') as string
+const role = localStorage.getItem('role')
 interface Props {
   setStateNewStaff: Dispatch<SetStateAction<boolean>>
 }
+let schema = yup.object().shape({
+  email: yup.string(),
+  password: yup.string().required("Enter a valid password").min(6).nullable(),
+});
 const NewStaff = ({ setStateNewStaff }: Props) => {
   const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [position, setPosition] = useState<string>('')
+  const formInput = useRef<HTMLInputElement>(null)
+
+
+  const mutation = useMutation(createStaff, {
+    onSuccess: (res) => {
+    },
+    onError: (e: Error) => {
+        toast.error(e?.message || "Error siging in!");
+    },
+})
 
   const onFinish = (e: FormEvent) => {
     e.preventDefault()
 
+    const values: CreateStaffType = {
+      password: e.target["password"].value,
+      firstName,
+      lastName,
+      email: e.target["email"].value,
+      // role,
+      password: '',
+      phoneNumber: '',
+  };
+
+  schema
+  .validate(values)
+  .then((_val) => {
+      mutation.mutate(values, {
+          onSuccess: (data) => {
+
+          },
+          onError: (e: unknown) => {
+              if (e instanceof Error) {
+                  toast.error(e.message)
+              }
+          }
+      });
+  })
+  .catch((e) => {
+      toast.error(e.message);
+  });
   }
   return (
     <div className="my-5 sm:my-0">
@@ -32,9 +83,11 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
 
       </div>
       <form onSubmit={onFinish}>
-        <Input label='Name' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Name" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-        <Input label='Email Address' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email Address' type="text" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
-        <Input label='Position' value={position} onChange={e => setPosition(e.target.value)} type="text" placeholder="Position" className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5" />
+        <Input label='Name' name='name' ref={formInput} type="text" placeholder="Name"  />
+        <Input label='Email Address' type ref={formInput} placeholder='Email Address' type="email"
+          // className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5"
+        />
+        <Input label='Position' ref={formInput} name='role' type="text" placeholder="Position" />
 
 
         <div className="flex items-center justify-center">

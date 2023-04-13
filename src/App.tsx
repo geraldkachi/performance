@@ -41,13 +41,13 @@ const App: React.FC = () => {
         <ToastContainer />
         <Suspense fallback={"Loading"}>
           <Routes>
-            <Route path='/login' element={<Login />} />
+            <Route path='/' element={<Login />} />
             <Route path='/reset' element={<ResetPassword />} />
 
             {/* Protected Roues */}
             <Route element={<ProtectedRoutes />}>
-              <Route path='/' element={<Layout />} >
-                <Route index element={<Home />} />
+              <Route element={<Layout />} >
+                <Route path='/home' element={<Home />} />
                 <Route path="/staff" element={<Staff />} />
                 <Route path="/staff/:id" element={<StaffDetail />} />
                 <Route path="/task" element={<Task />} />
@@ -58,7 +58,7 @@ const App: React.FC = () => {
               </Route>
             </Route>
             {/* 404 page */}
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>
 
