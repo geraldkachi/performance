@@ -1,19 +1,17 @@
-import { Table, Dropdown, Tag } from "antd";
-import Title from "antd/es/skeleton/Title";
-import { format } from "date-fns";
+import { Table } from "antd";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Modal, NewStaff, NewTask } from "../../components";
+import { format } from "date-fns";
 import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
+
 import { getStaffs } from "../../server/base";
+import { Button, Modal, NewStaff, NewTask } from "../../components";
 
 
 const columns = [
   {
     title: 'Staff Name',
-    // dataIndex: 'firstName',
     width: '10%',
-    align: 'center',
     render: (val: any) => (
       <span className="capitalize whitespace-nowrap text-start">{`${val?.firstName} ${val?.lastName}`}</span>
     ),
@@ -22,7 +20,6 @@ const columns = [
     title: 'Email Address',
     dataIndex: 'email',
     width: '10%',
-    align: 'center',
   },
   {
     title: 'Role',
@@ -34,11 +31,10 @@ const columns = [
     title: 'Tasks',
     dataIndex: 'task',
     width: '5%',
-    align: 'center',
+    align: 'start',
   },
   {
     title: 'Status',
-    // dataIndex: 'isActive',
     width: '12%',
     align: 'center',
     render: (val: any) => (
