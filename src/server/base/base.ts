@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 
 const BACKEND_URL = import.meta.env.VITE_API_KEY
 
-export const instance = (token = true) => {
+const token = localStorage.getItem('token')
+
+export const instance = () => {
     const instanceHttp = axios.create({
         // baseURL: BACKEND_URL,
         baseURL: `http://161.35.111.243:2009/v1/`,
@@ -19,7 +21,7 @@ export const instance = (token = true) => {
         config.headers = config.headers ?? {};
 
         if (token) {
-            config.headers.Authorization = `Bearer ${Cookies.get("Authenticated")}`
+            config.headers.Authorization = `Bearer ${token}`
         }
         return config;
     });

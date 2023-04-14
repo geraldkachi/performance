@@ -4,14 +4,19 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, NewStaff, NewTask } from "../../components";
+import { useQuery } from "react-query";
+import { getStaffs } from "../../server/base";
 
 
 const columns = [
   {
     title: 'Staff Name',
-    dataIndex: 'name',
+    // dataIndex: 'firstName',
     width: '10%',
     align: 'center',
+    render: (val: any) => (
+      <span className="capitalize whitespace-nowrap text-start">{`${val?.firstName} ${val?.lastName}`}</span>
+    ),
   },
   {
     title: 'Email Address',
@@ -33,206 +38,34 @@ const columns = [
   },
   {
     title: 'Status',
-    dataIndex: 'status',
+    // dataIndex: 'isActive',
     width: '12%',
     align: 'center',
+    render: (val: any) => (
+      <span className="capitalize whitespace-nowrap text-start">{`${val?.isActive}`}</span>
+    ),
   },
 ];
 
-const candidature = [
-  {
-    key: "1",
-
-    name: (
-      <>
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">O M</span> {' '}
-          <span className="whitespace-nowrap">
-            Ope Mensorale
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">opemensorale@arvo.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<CheckCircleOutlined />} color="#87d068">
-            Valid
-          </Tag> */}
-          Dey Wait for Role
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          On Going
-        </div>
-      </>
-    )
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "3",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-]
 
 const Staff = () => {
   const navigate = useNavigate();
 
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
   const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
+  const { data, isLoading, isFetching } = useQuery(["getStaffs", page, limit], () => getStaffs(limit, page), { keepPreviousData: true })
+  console.log(data?.data?.staff, 'getStaffs')
+
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onLimitChange = (_: any, limit: number) => {
+    setLimit(limit);
+  };
 
   return (
     <div>
@@ -253,26 +86,20 @@ const Staff = () => {
 
       <div className="mt-10 mb-20 overflow-x-auto">
         <Table
-          // dataSource={data?.data?.customers}
-          // columns={columns}
-          // // loading={}
-          // rowClassName={(_record, index) => (index % 2 !== 0 ? "stripe" : "")}
-          // pagination={{
-          //   position: ["bottomRight"],
-          //   current: page,
-          //   total: data?.data?.count,
-          //   pageSize: limit,
-          //   showSizeChanger: true,
-          //   onShowSizeChange: onLimitChange,
-          //   onChange: onPageChange,
-          // }}
-          // rowKey={(record) => record?.id}
-
           size="small"
-          rowKey="id"
-          pagination={false}
+          rowKey={(record) => record?.id}
+          loading={isLoading || isFetching}
           columns={columns}
-          dataSource={candidature}
+          dataSource={data?.data?.staff}
+          pagination={{
+            position: ["bottomRight"],
+            current: page,
+            total: data?.data?.count,
+            pageSize: limit,
+            showSizeChanger: true,
+            onShowSizeChange: onLimitChange,
+            onChange: onPageChange,
+          }}
           style={{ marginTop: '20px' }}
         />
       </div>

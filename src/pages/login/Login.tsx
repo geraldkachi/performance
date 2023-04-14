@@ -43,9 +43,6 @@ const Login = () => {
     const { mutate: verifyOtpMutation, isLoading: otpLoading } = useMutation(verifyOtp,
         {
             onSuccess: (res) => {
-                console.log(res, 'response of otp');
-                console.log(res?.data?.staff, 'staffs of otp');
-                console.log(res?.data?.staff?.firstName, 'res?.data?.staff?.firstName');
                 toast.success("Login successful");
                 localStorage.setItem("role", JSON.stringify(res?.data?.role));
                 localStorage.setItem("token", res?.data?.token);

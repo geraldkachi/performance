@@ -11,3 +11,13 @@ export const createStaff = async (payload: CreateStaffType) => {
 
     return data;
 };
+
+export const getStaffs = async (limit: string | number, page: string | number) => {
+    const { data } = await instance()
+        .get(`/staff?limit=${limit}&page=${page}`)
+        .catch((e) => {
+            return next(e);
+        });
+
+    return data;
+};

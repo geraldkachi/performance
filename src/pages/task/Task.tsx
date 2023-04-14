@@ -2,6 +2,8 @@ import { Table, Dropdown, Tag } from "antd";
 import { format } from "date-fns";
 import { useState } from "react";
 import { Button, Modal, NewStaff, NewTask } from "../../components";
+import { createTask, getTasks } from "../../server/base/task";
+import { useMutation, useQuery } from "react-query";
 
 const columns = [
   {
@@ -228,6 +230,9 @@ const candidature = [
 const Task = () => {
   const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
+  const mutation = useMutation(createTask)
+  const { data } = useQuery("taskApi", () => getTasks(10))
+  console.log(data, 'data for task')
 
   return (
     <div>

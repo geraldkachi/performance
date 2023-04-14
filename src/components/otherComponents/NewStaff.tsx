@@ -1,11 +1,12 @@
-import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react"
-import Button from "../button/Button"
-import Input from "../input/Input"
-import { createStaff } from "../../server/base"
-import { useMutation } from "react-query"
-import { toast } from "react-toastify"
-import { CreateStaffType } from "../../../types"
 import * as yup from "yup";
+import { toast } from "react-toastify"
+import { useMutation } from "react-query"
+import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react"
+
+import Input from "../input/Input"
+import Button from "../button/Button"
+import { createStaff } from "../../server/base"
+import { CreateStaffType } from "../../../types"
 
 
 const firstName = localStorage.getItem('firstName') as string
@@ -19,19 +20,10 @@ let schema = yup.object().shape({
   password: yup.string().required("Enter a valid password").min(6).nullable(),
 });
 const NewStaff = ({ setStateNewStaff }: Props) => {
-  const [name, setName] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [position, setPosition] = useState<string>('')
   const formInput = useRef<HTMLInputElement>(null)
 
 
-  const mutation = useMutation(createStaff, {
-    onSuccess: (res) => {
-    },
-    onError: (e: Error) => {
-        toast.error(e?.message || "Error siging in!");
-    },
-})
+  const mutation = useMutation(createStaff)
 
   const onFinish = (e: FormEvent) => {
     e.preventDefault()
@@ -41,28 +33,26 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
       firstName,
       lastName,
       email: e.target["email"].value,
-      // role,
-      password: '',
-      phoneNumber: '',
-  };
+      role: e.target["role"].value,
+      phoneNumber: e.target["phone"].value,
+    };
 
-  schema
-  .validate(values)
-  .then((_val) => {
-      mutation.mutate(values, {
+    schema
+      .validate(values)
+      .then((_val) => {
+        mutation.mutate(values, {
           onSuccess: (data) => {
-
+            setStateNewStaff(prev => !prev)
+            toast.success('Staff Created Successfully')
           },
           onError: (e: unknown) => {
-              if (e instanceof Error) {
-                  toast.error(e.message)
-              }
+            if (e instanceof Error) {
+              toast.error(e.message)
+            }
           }
-      });
-  })
-  .catch((e) => {
-      toast.error(e.message);
-  });
+        });
+      })
+
   }
   return (
     <div className="my-5 sm:my-0">
@@ -83,15 +73,19 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
 
       </div>
       <form onSubmit={onFinish}>
-        <Input label='Name' name='name' ref={formInput} type="text" placeholder="Name"  />
-        <Input label='Email Address' type ref={formInput} placeholder='Email Address' type="email"
-          // className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5"
+        <Input label='Name' name='name' ref={formInput} type="text" placeholder="Name" />
+        <Input label='Email Address' ref={formInput} name='email' placeholder='Email Address' type="email"
+        // className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5"
         />
         <Input label='Position' ref={formInput} name='role' type="text" placeholder="Position" />
+        <Input label='Password' ref={formInput} name='password' type="password" placeholder="Password" />
+        <Input label='phone' ref={formInput} name='phone' type="tel" placeholder="Phone Number" />
 
 
         <div className="flex items-center justify-center">
-          <Button className="text-center rounded-lg mt-5" type="submit" title="Add New Staff" onClick={() => setStateNewStaff(false)} />
+          <Button className="text-center rounded-lg mt-5 w-full" loading={mutation.isLoading} type="submit" title="Add New Staff"
+            // onClick={() => setStateNewStaff(false)}
+          />
         </div>
       </form>
     </div>

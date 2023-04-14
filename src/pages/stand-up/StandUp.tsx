@@ -3,6 +3,9 @@ import Title from "antd/es/skeleton/Title";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components";
+import { useQuery } from "react-query";
+import { getStandUp } from "../../server/base/standup";
+import { useState } from "react";
 
 
 const columns = [
@@ -11,6 +14,9 @@ const columns = [
     dataIndex: 'name',
     width: '10%',
     align: 'center',
+    render: (val: any) => (
+      <span className="capitalize">{`${val?.firstName} ${val?.lastName}`}</span>
+    ),
   },
   {
     title: 'Email Address',
@@ -38,197 +44,23 @@ const columns = [
   },
 ];
 
-const candidature = [
-  {
-    key: "1",
-
-    name: (
-      <>
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">O M</span> {' '}
-          <span className="whitespace-nowrap">
-            Ope Mensorale
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">opemensorale@arvo.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<CheckCircleOutlined />} color="#87d068">
-            Valid
-          </Tag> */}
-          Dey Wait for Role
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          On Going
-        </div>
-      </>
-    )
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "3",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-]
-
 const StandUp = () => {
   const navigate = useNavigate()
+
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
+  const { data, isLoading, isFetching} = useQuery(["getStandUp", limit, page], () => getStandUp(10))
+  console.log(data, 'getStandUp')
+
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onLimitChange = (_: any, limit: number) => {
+    setLimit(limit);
+  };
+
   return (
     <div>
       <div className="mt-5 flex items-center justify-between">
@@ -249,26 +81,20 @@ const StandUp = () => {
 
       <div className="mt-10 mb-20 overflow-x-auto">
         <Table
-          // dataSource={data?.data?.customers}
-          // columns={columns}
-          // // loading={}
-          // rowClassName={(_record, index) => (index % 2 !== 0 ? "stripe" : "")}
-          // pagination={{
-          //   position: ["bottomRight"],
-          //   current: page,
-          //   total: data?.data?.count,
-          //   pageSize: limit,
-          //   showSizeChanger: true,
-          //   onShowSizeChange: onLimitChange,
-          //   onChange: onPageChange,
-          // }}
-          // rowKey={(record) => record?.id}
-
           size="small"
-          rowKey="id"
-          pagination={false}
+          loading={isLoading || isFetching}
           columns={columns}
-          dataSource={candidature}
+          dataSource={data?.data?.standup}
+          pagination={{
+            position: ["bottomRight"],
+            current: page,
+            total: data?.data?.count,
+            pageSize: limit,
+            showSizeChanger: true,
+            onShowSizeChange: onLimitChange,
+            onChange: onPageChange,
+          }}
+          rowKey={(record) => record?.id}
           style={{ marginTop: '20px' }}
         />
       </div>
