@@ -2,13 +2,13 @@ import { Table } from "antd";
 import { useState } from "react";
 import { format } from "date-fns";
 import Chart from "react-apexcharts";
+import { useQuery } from "react-query";
 
 import Modal from "../../components/modal/Modal";
 import Button from "../../components/button/Button";
+import { getMetrics } from "../../server/base/metrix";
 import NewStaff from "../../components/otherComponents/NewStaff";
 import NewTask from "../../components/otherComponents/NewTask";
-import { useQuery } from "react-query";
-import { getMetrics } from "../../server/base/metrix";
 interface columnsProps {
   title: string
   width: string,
@@ -75,11 +75,10 @@ const id = localStorage.getItem('staffId')
 const Home = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
-  const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
+  const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
   const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { keepPreviousData: true })
 
-  console.log(data, 'data for metrix')
   const state = {
 
     options: {
@@ -89,7 +88,7 @@ const Home = () => {
           categories: [
             "Gerald",
             "Kingsley",
-            "Ope",          // horizontal: true, //horizontal bar chart
+            "Ope",
             "Dare",
             "Akan",
             "Prince",
@@ -170,7 +169,6 @@ const Home = () => {
   const onLimitChange = (_: any, limit: number) => {
     setLimit(limit);
   };
-
 
   return (
     <div>
