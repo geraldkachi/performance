@@ -311,7 +311,7 @@ const History = () => {
           rowKey="id"
           pagination={false}
           columns={columns}
-          dataSource={candidature}
+          dataSource={[]}
           style={{ marginTop: '20px' }}
         />
       </div>

@@ -1,244 +1,67 @@
-import { Table, Dropdown, Tag } from "antd";
-import Title from "antd/es/skeleton/Title";
+import * as yup from "yup";
 import { format } from "date-fns";
-import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FormEvent, useRef, useState } from "react";
+import { useMutation, useQuery } from "react-query";
+
 import { Button } from "../../components";
 import Input from "../../components/input/Input";
+import { createStandUp } from "../../server/base/standup";
+import { toast } from "react-toastify";
+import { getStaffs } from "../../server/base";
+import { Select } from "antd";
 
-const columns = [
-  {
-    title: 'Staff Name',
-    dataIndex: 'name',
-    width: '10%',
-    align: 'center',
-  },
-  {
-    title: 'Email Address',
-    dataIndex: 'email',
-    width: '10%',
-    align: 'center',
-  },
-  {
-    title: 'Role',
-    dataIndex: 'role',
-    width: '20%',
-    align: 'center',
-  },
-  {
-    title: 'Tasks',
-    dataIndex: 'task',
-    width: '5%',
-    align: 'center',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    width: '12%',
-    align: 'center',
-  },
-];
-
-const candidature = [
-  {
-    key: "1",
-
-    name: (
-      <>
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">O M</span> {' '}
-          <span className="whitespace-nowrap">
-            Ope Mensorale
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">opemensorale@arvo.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<CheckCircleOutlined />} color="#87d068">
-              Valid
-            </Tag> */}
-          Dey Wait for Role
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          On Going
-        </div>
-      </>
-    )
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "3",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-]
-
+let schema = yup.object().shape({});
 
 const StandUpDetail = () => {
   const navigate = useNavigate()
-  const [name, setName] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [position, setPosition] = useState<string>('')
+  const [state, setState] = useState(null);
+  const [role, setRole] = useState<string>("");
+  const formInput = useRef<HTMLInputElement>(null)
+
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
+
+  const mutation = useMutation(createStandUp)
+  const { data, isLoading, isFetching } = useQuery(["getStaffs", limit, page], () => getStaffs(limit, page), { keepPreviousData: true })
+  console.log(data?.data?.staff, 'getStaffs')
+  console.log(state, 'getStaffs state')
 
 
   const onFinish = (e: FormEvent) => {
     e.preventDefault()
+
+    let values = {
+      title: e.target["title"].value,
+      participants: [state],
+    }
+
+    console.log(values, 'values')
+
+    schema
+      .validate(values)
+      .then((_val) => {
+        mutation.mutate(values, {
+          onSuccess: (data) => {
+            toast.success(data?.message)
+            values = {title: '', participants: []}
+          },
+          onError: (e: unknown) => {
+            if (e instanceof Error) {
+              toast.error(e.message)
+            }
+          }
+        });
+      })
   }
+
+  const rolesOption = [
+    { label: "Admin", value: "admin" },
+    { label: "Sub Admin", value: "sub-admin" },
+    { label: "Super Admin", value: "super-admin" },
+  ];
+
   return (
     <div>
       <div className="mt-5 flex items-center justify-between">
@@ -250,21 +73,44 @@ const StandUpDetail = () => {
 
       </div>
 
-      {/* <div className="mt-5 flex items-center">
-          <Button variant="primary" className="cursor-pointer px-14 py-4 my-5 rounded-lg bg-[#2B8572] text-[#ffffff]" type="button" title="Start Stand Up" onClick={() => (navigate('/history'))} />
-
-          <Button variant="primary" className="cursor-pointer ml-3 px-14 py-4 my-5 rounded-lg bg-[#E71D36] text-[#ffffff]" type="button" title="End Stand Up" onClick={() => (true)} />
-        </div> */}
-
-      <div className="grid sm:grid-cols-2">
+      <div className="grid sm:grid-cols-2 mb-20">
         <form onSubmit={onFinish}>
-          <Input label='Title' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Enter meeting title" />
-          <Input label='12:15AM' value={email} onChange={e => setEmail(e.target.value)} placeholder='12:15AM' type="text" />
-          <Input label='Participation' value={position} onChange={e => setPosition(e.target.value)} type="text" placeholder="Select staff " />
-
+          <Input ref={formInput} label='Title' name='title' type="text" placeholder="Enter meeting title" />
+          {/* <Input ref={formInput} label='12:15AM' name='date' placeholder='12:15AM' type="date" /> */}
+          {/* <Input ref={formInput} label='Participation' name="participants" type="text" placeholder="Select staff " /> */}
+          <div className="mt-5">
+            <div className="">
+              <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">Participation</label>
+            </div>
+            <Select
+              placeholder="Select Participation"
+              style={{ width: "100%" }}
+              size="large"
+              loading={ isLoading || isFetching}
+              value={state}
+              onSelect={(e) => setState(e)}
+              options={data &&
+                data?.data?.staff?.map((val) => {
+                  const temp = {
+                    value: val?.id,
+                    label: `${val?.firstName} ${val?.lastName}`,
+                  };
+                  return temp;
+                })}
+              className="mb-3 py-3"
+            />
+            {/* <Select
+              style={{ width: "100%" }}
+              size="large"
+              value={state} onChange={value => setState(value)}>
+              {data?.data?.staff?.map((option: any) => (
+                <Select.Option key={option?.id} value={option?.id}>{`${option?.firstName} ${option?.lastName}`}</Select.Option>
+              ))}
+            </Select> */}
+          </div>
 
           <div className="flex items-center">
-            <Button className="text-center rounded-lg mt-10" type="submit" title="Start meeting" onClick={() => { }} />
+            <Button loading={mutation.isLoading} className="text-center rounded-lg mt-10" type="submit" title="Start meeting" />
           </div>
         </form>
       </div>

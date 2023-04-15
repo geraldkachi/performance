@@ -7,7 +7,14 @@ import Input from "../input/Input"
 import Button from "../button/Button"
 import { createStaff } from "../../server/base"
 import { CreateStaffType } from "../../../types"
+import { Select } from "antd";
 
+
+export const rolesOption = [
+  { label: "Admin", value: "admin" },
+  { label: "Sub Admin", value: "sub-admin" },
+  { label: "Super Admin", value: "super-admin" },
+];
 
 const firstName = localStorage.getItem('firstName') as string
 const lastName = localStorage.getItem('lastName') as string
@@ -21,6 +28,8 @@ let schema = yup.object().shape({
 });
 const NewStaff = ({ setStateNewStaff }: Props) => {
   const formInput = useRef<HTMLInputElement>(null)
+  const [state, setState] = useState<string>('')
+
 
 
   const mutation = useMutation(createStaff)
@@ -33,8 +42,9 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
       firstName,
       lastName,
       email: e.target["email"].value,
-      role: e.target["role"].value,
-      phoneNumber: e.target["phone"].value,
+      role: state,
+      // role: e.target["role"].value,
+      phoneNumber: (e.target["phone"].value).replace(/ /g, ''),
     };
 
     schema
@@ -77,8 +87,22 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
         <Input label='Email Address' ref={formInput} name='email' placeholder='Email Address' type="email"
         // className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5"
         />
-        <Input label='Position' ref={formInput} name='role' type="text" placeholder="Position" />
+        {/* <Input label='Position' ref={formInput} name='role' type="text" placeholder="Position" /> */}
+        <div className="mt-5">
+            <div className="">
+              <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">Status</label>
+            </div>
+          <Select
+            placeholder="Select Status"
+            style={{ width: "100%" }}
+            size="large"
+            onSelect={(e) => setState(e)}
+            options={rolesOption}
+            className="mb-3"
+          />
+          </div>
         <Input label='Password' ref={formInput} name='password' type="password" placeholder="Password" />
+
         <Input label='phone' ref={formInput} name='phone' type="tel" placeholder="Phone Number" />
 
 

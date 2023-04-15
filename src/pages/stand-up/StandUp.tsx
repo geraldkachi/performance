@@ -1,47 +1,60 @@
-import { Table, Dropdown, Tag } from "antd";
-import Title from "antd/es/skeleton/Title";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../../components";
-import { useQuery } from "react-query";
-import { getStandUp } from "../../server/base/standup";
+import { Table } from "antd";
 import { useState } from "react";
+import { format } from "date-fns";
+import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 
+import { Button } from "../../components";
+import { getStandUp } from "../../server/base/standup";
 
 const columns = [
   {
     title: 'Staff Name',
-    dataIndex: 'name',
+    // dataIndex: 'title',
     width: '10%',
-    align: 'center',
     render: (val: any) => (
-      <span className="capitalize">{`${val?.firstName} ${val?.lastName}`}</span>
+      <div className=" flex items-center">
+        <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">
+          {/* {`${val?.title
+            .split(' ')[0]
+            .charAt(0)}${val?.title
+              .split(' ')[1]
+              .charAt(0)}`} */}
+        </span>
+        <span className="capitalize whitespace-nowrap">{`${val?.title}`}</span>
+      </div>
     ),
   },
   {
-    title: 'Email Address',
-    dataIndex: 'email',
+    title: 'Creator Id',
+    // dataIndex: 'creator',
     width: '10%',
-    align: 'center',
+    // align: 'center',
+    render: (val: any) => (
+      <span className="capitalize whitespace-nowrap">{`${val?.creator}`}</span>
+    )
   },
   {
-    title: 'Role',
-    dataIndex: 'role',
+    title: 'Created At',
+    // dataIndex: 'createdAt',
     width: '20%',
-    align: 'center',
+    // align: 'center',
+    render: (val: any) => (
+      <span className="capitalize whitespace-nowrap">{`${val?.createdAt ? format(new Date(val?.createdAt), "dd MMMM yyyy, hh:mm a") : "--/--/----"}`}</span>
+    )
   },
-  {
-    title: 'Tasks',
-    dataIndex: 'task',
-    width: '5%',
-    align: 'center',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    width: '12%',
-    align: 'center',
-  },
+  // {
+  //   title: 'Tasks',
+  //   dataIndex: 'task',
+  //   width: '5%',
+  //   align: 'center',
+  // },
+  // {
+  //   title: 'Status',
+  //   dataIndex: 'status',
+  //   width: '12%',
+  //   align: 'center',
+  // },
 ];
 
 const StandUp = () => {
@@ -50,7 +63,7 @@ const StandUp = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const { data, isLoading, isFetching} = useQuery(["getStandUp", limit, page], () => getStandUp(10))
+  const { data, isLoading, isFetching } = useQuery(["getStandUp", limit, page], () => getStandUp(10))
   console.log(data, 'getStandUp')
 
   const onPageChange = (page: number) => {

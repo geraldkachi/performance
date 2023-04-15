@@ -10,3 +10,12 @@ export const getStandUp = async (limit?: string | number) => {
 
     return data;
 };
+export const createStandUp = async (payload: any) => {
+    const { data } = await instance()
+        .post(`/standup`, payload)
+        .catch((e) => {
+            return next(e);
+        });
+
+    return data;
+};

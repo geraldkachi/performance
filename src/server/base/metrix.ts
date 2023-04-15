@@ -1,9 +1,10 @@
 
 import { instance, next } from "./base";
 
-export const getMetric = async (limit?: string | number) => {
+export const getMetrics = async (page?: string | number, limit?: string | number, id?: string) => {
     const { data } = await instance()
-        .get(`/metric?page=1&limit=${limit}`, )
+        .get(`/metric?${page}=1&${limit}=10&standupId=${id}`)
+
         .catch((e) => {
             return next(e);
         });

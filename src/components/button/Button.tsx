@@ -50,7 +50,7 @@ const Button = ({
         <button {...rest}
             type={type}
             disabled={disabled || loading}
-            className={`bg-[#2B8572] shadow-md py-3 md:py-4 px-8 md:px-12 rounded-lg font-bold disabled:bg-grey border disabled:text-gray-50 whitespace-nowrap ${variants[variant]} ${sizes[size]} ${className}`}>
+            className={`bg-[#2B8572] shadow-md py-3 md:py-4 px-8 md:px-12 rounded-lg font-bold disabled:bg-grey border disabled:text-gray-50 whitespace-nowrap ${variants[variant]} ${sizes[size]} ${className} ${loading && 'py-3 md:py-4 px-8 md:px-12 '}`}>
             {prefixIcon && (<> {prefixIcon}&nbsp;&nbsp;&nbsp;</>)}
             {loading ? <Spinner /> : <>{title}</>}
             {suffixIcon && (<> &nbsp;&nbsp;&nbsp;{suffixIcon}</>)}

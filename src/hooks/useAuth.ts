@@ -1,9 +1,7 @@
-import Cookies from "js-cookie";
 import { create } from "zustand";
 
 // const token = JSON.parse(localStorage.getItem('Authenticated') as string);
 const token = localStorage.getItem('token')
-console.log(token, "token");
 
 type State = {
     token?: string | null

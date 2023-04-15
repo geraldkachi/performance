@@ -4,35 +4,52 @@ import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react"
 
 import Input from '../input/Input'
 import Button from '../button/Button'
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { createTask } from "../../server/base/task";
+import { getStaffs } from "../../server/base";
+import { Select } from "antd";
 
 
 
 interface Props {
   setStateNewTask: Dispatch<SetStateAction<boolean>>
 }
-let schema = yup.object().shape({
-  email: yup.string(),
-  password: yup.string().required("Enter a valid password").min(6).nullable(),
-});
-const NewTask = ({ setStateNewTask }: Props) => {
-  const formInput = useRef<HTMLInputElement>(null)
+let schema = yup.object().shape({});
 
-const mutation = useMutation(createTask)
+const rolesOption = [
+  { label: "Not Started", value: "not-started" },
+  { label: "Ongoing", value: "ongoing" },
+  { label: "Finished", value: "finished" },
+  { label: "Finished", value: "finished" },
+  { label: "Finished", value: "finished" },
+  { label: "Finished", value: "finished" },
+  { label: "Finished", value: "finished" },
+  { label: "Finished", value: "finished" },
+];
+
+const NewTask = ({ setStateNewTask }: Props) => {
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+  const formInput = useRef<HTMLInputElement>(null)
+  const [state, setState] = useState<string>('')
+
+  const { data, isLoading, isFetching } = useQuery(["getStaffs", limit, page], () => getStaffs(limit, page), { keepPreviousData: true })
+  console.log(data?.data?.staff, 'getStaffs')
+
+  const mutation = useMutation(createTask)
 
   const onFinish = (e: FormEvent) => {
     e.preventDefault()
 
     const values = {
-      name: e.target["name"].value,
-      staffId: "",
+      name:e.target["name"].value,
+      staffId: "2a7e33bd-2e83-4dd4-81b3-9d337bece591",
       endDate: e.target["enddate"].value,
       startDate: e.target["startdate"].value,
-      assignedBy: "",
+      assignedBy: "2a7e33bd-2e83-4dd4-81b3-9d337bece591",
       description: e.target["description"].value,
-      dependants: [],
-      status: e.target["status"].value,
+      dependants: ['Kingsley'],
+      status: state,
     }
 
     schema
@@ -52,6 +69,7 @@ const mutation = useMutation(createTask)
       })
 
   }
+
   return (
     <div className="my-5 sm:my-0">
       <div className="flex items-center justify-between mb-10">
@@ -76,10 +94,23 @@ const mutation = useMutation(createTask)
         <Input ref={formInput} label='Start Date' name="startdate" type="date" placeholder="Position" />
         <Input ref={formInput} label='End Date' name="enddate" type="date" placeholder="Position" />
         <Input ref={formInput} label='Description' name='description' placeholder='Description' type="text" />
-
+        <div className="mt-5">
+            <div className="">
+              <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">Status</label>
+            </div>
+          <Select
+            placeholder="Select Status"
+            style={{ width: "100%" }}
+            size="large"
+            onSelect={(e) => setState(e)}
+            options={rolesOption}
+            loading={ isLoading || isFetching }
+            className="mb-3"
+          />
+          </div>
 
         <div className="flex items-center justify-center">
-          <Button className="text-center rounded-lg mt-5" type="submit" title="Create Task" />
+          <Button loading={mutation.isLoading} className="text-center rounded-lg mt-5" type="submit" title="Create Task" />
         </div>
       </form>
     </div>

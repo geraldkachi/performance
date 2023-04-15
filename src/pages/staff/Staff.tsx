@@ -8,6 +8,27 @@ import { getStaffs } from "../../server/base";
 import { Button, Modal, NewStaff, NewTask } from "../../components";
 
 
+
+const Staff = () => {
+  const navigate = useNavigate();
+
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
+  const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
+  const [stateNewTask, setStateNewTask] = useState<boolean>(false)
+  const { data, isLoading, isFetching } = useQuery(["getStaffs", limit, page], () => getStaffs(limit, page), { keepPreviousData: true })
+  console.log(data?.data?.staff, 'getStaffs')
+
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onLimitChange = (_: any, limit: number) => {
+    setLimit(limit);
+  };
+
+
 const columns = [
   {
     title: 'Staff Name',
@@ -28,40 +49,24 @@ const columns = [
     align: 'center',
   },
   {
-    title: 'Tasks',
-    dataIndex: 'task',
-    width: '5%',
-    align: 'start',
-  },
-  {
     title: 'Status',
     width: '12%',
     align: 'center',
     render: (val: any) => (
       <span className="capitalize whitespace-nowrap text-start">{`${val?.isActive}`}</span>
-    ),
-  },
+      ),
+    },
+    {
+      title: 'ID',
+      // dataIndex: 'id',
+      width: '5%',
+      // align: 'start',
+      render: (val: any) => (
+        <span className="capitalize whitespace-nowrap text-start cursor-pointer" onClick={() => navigate(`/staff/${val?.id}`)}>{`${val?.id}`}</span>
+        ),
+    },
 ];
 
-
-const Staff = () => {
-  const navigate = useNavigate();
-
-  const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-
-  const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
-  const [stateNewTask, setStateNewTask] = useState<boolean>(false)
-  const { data, isLoading, isFetching } = useQuery(["getStaffs", page, limit], () => getStaffs(limit, page), { keepPreviousData: true })
-  console.log(data?.data?.staff, 'getStaffs')
-
-  const onPageChange = (page: number) => {
-    setPage(page);
-  };
-
-  const onLimitChange = (_: any, limit: number) => {
-    setLimit(limit);
-  };
 
   return (
     <div>

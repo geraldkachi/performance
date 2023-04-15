@@ -3,6 +3,9 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { Button, NewStaff, NewTask } from "../../components";
 import { Pie } from "@ant-design/plots";
+import { getTaskById } from "../../server/base/task";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 
 
 type DataType = "new" | "evaluating" | "ongoing" | "finished" | "archived" | "Task Rate";
@@ -295,7 +298,11 @@ const candidature = [
 ]
 
 const StaffDetail = () => {
+  const {id} = useParams()
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
+  const { data, isLoading, isFetching } = useQuery(["getTaskById", id], () => getTaskById(id), { keepPreviousData: true })
+  console.log(data, 'getTaskById')
+  console.log(id, 'id params')
 
   return (
     <div>

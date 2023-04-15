@@ -48,6 +48,7 @@ const Login = () => {
                 localStorage.setItem("token", res?.data?.token);
                 localStorage.setItem("firstName", res?.data?.staff?.firstName);
                 localStorage.setItem("lastName", res?.data?.staff?.lastName);
+                localStorage.setItem("staffId", res?.data?.staff?.id);
                 navigate("/home");
             },
             onError: (e: Error) => {
