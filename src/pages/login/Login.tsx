@@ -44,7 +44,7 @@ const Login = () => {
         {
             onSuccess: (res) => {
                 toast.success("Login successful");
-                localStorage.setItem("role", JSON.stringify(res?.data?.role));
+                localStorage.setItem("role", JSON.stringify(res?.data?.staff?.role));
                 localStorage.setItem("token", res?.data?.token);
                 localStorage.setItem("firstName", res?.data?.staff?.firstName);
                 localStorage.setItem("lastName", res?.data?.staff?.lastName);
@@ -116,16 +116,16 @@ const Login = () => {
 
                 <div className='text-center logoLogin flex flex-col justify-center items-center absolute top-[13%] md:top-[12%]'>
                     <img src="" alt="" />
-                    <div className='flex items-center gap-5 text-3xl mb-10'>
-                        Perfomance Metrix
-                    </div>
+                    {/* <div className='flex items-center gap-5 text-3xl mb-10'>
+                        Perfomance Metric
+                    </div> */}
                 </div>
 
                 <div className="login z-10 p-5 rounded-lg w-full max-w-[23rem]  md:bg-white bg-transparent">
 
                     <div className='p-[10px]'>
-                        <span className='text-[#949AB1] text-sm'>Welcome Back,</span>
-                        <h1 className='font-bold'>Admin</h1>
+                        {/* <span className='text-[#949AB1] text-sm'>Welcome Back,</span>
+                        <h1 className='font-bold'>Admin</h1> */}
                     </div>
 
                     <div className="text-center my-4">
@@ -167,7 +167,7 @@ const Login = () => {
                             </div>
 
                             <div className="flex items-center mt-10">
-                                <Button className='w-full text-center' title="Sign In" type='submit'
+                                <Button className='w-full text-center' disabled={mutation?.isLoading} loading={mutation?.isLoading} title="Sign In" type='submit'
                                 // onClick={() => navigate('/home')}
                                 />
                             </div>

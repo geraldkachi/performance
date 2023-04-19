@@ -108,201 +108,12 @@ const columns = [
   },
 ];
 
-const candidature = [
-  {
-    key: "1",
-
-    name: (
-      <>
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">O M</span> {' '}
-          <span>
-            Ope Mensorale
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">opemensorale@arvo.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project">
-          {/* <Tag icon={<CheckCircleOutlined />} color="#87d068">
-            Valid
-          </Tag> */}
-          Dey Wait for Role
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project">
-          Finished
-
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project">
-          On Going
-        </div>
-      </>
-    )
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "3",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project">
-          Finished
-        </div>
-      </>
-    )
-  },
-]
-
 const StaffDetail = () => {
-  const {id} = useParams()
+  // const {id} = useParams()
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
-  const { data, isLoading, isFetching } = useQuery(["getTaskById", id], () => getTaskById(id), { keepPreviousData: true })
-  console.log(data, 'getTaskById')
-  console.log(id, 'id params')
+  // const { data, isLoading, isFetching } = useQuery(["getTaskById", id], () => getTaskById(id), { keepPreviousData: true })
+  // console.log(data, 'getTaskById')
+  // console.log(id, 'id params')
 
   return (
     <div>
@@ -336,9 +147,6 @@ const StaffDetail = () => {
           Recent Tasks
         </div>
         <Table
-          // dataSource={data?.data?.customers}
-          // columns={columns}
-          // // loading={}
           // rowClassName={(_record, index) => (index % 2 !== 0 ? "stripe" : "")}
           // pagination={{
           //   position: ["bottomRight"],
@@ -349,13 +157,12 @@ const StaffDetail = () => {
           //   onShowSizeChange: onLimitChange,
           //   onChange: onPageChange,
           // }}
-          // rowKey={(record) => record?.id}
 
           size="small"
-          rowKey="id"
-          pagination={false}
           columns={columns}
-          dataSource={candidature}
+          dataSource={[]}
+          // loading={isLoading || isFetching }
+          rowKey={(record) => record?.id}
           style={{ marginTop: '20px' }}
         />
       </div>

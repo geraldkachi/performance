@@ -31,3 +31,12 @@
 ::-webkit-scrollbar-thumb:window-inactive {
   background: #1fb796;
 }
+.ant-select-focused .ant-select-selector,
+.ant-select-selector:focus,
+.ant-select-selector:active,
+.ant-select-selector:hover,
+.ant-select-open .ant-select-selector {
+  border-color: #2B8572 !important;
+  border-width: 2px !important;
+  box-shadow: none !important;
+}

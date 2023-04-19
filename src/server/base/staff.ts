@@ -21,3 +21,13 @@ export const getStaffs = async (limit: string | number, page: string | number) =
 
     return data;
 };
+
+export const changePassword = async (payload: {currentPassword: string, password: string}) => {
+    const { data } = await instance()
+        .patch(`/staff/change-password`, payload)
+        .catch((e) => {
+            return next(e);
+        });
+
+    return data;
+};

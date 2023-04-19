@@ -9,10 +9,19 @@ export const getTasks = async (page: string | number, limit?: string | number) =
 
     return data;
 };
-
-export const getTaskById = async (id: string) => {
+export const deleteTask = async (id: string) => {
     const { data } = await instance()
-        .get(`/task/:${id}`,)
+        .delete(`/task/${id}`)
+        .catch((e) => {
+            return next(e);
+        });
+
+    return data;
+};
+
+export const getTaskById = async (id: string | null | undefined) => {
+    const { data } = await instance()
+        .get(`/task/${id}`,)
         .catch((e) => {
             return next(e);
         });

@@ -86,7 +86,7 @@ const StandUp = () => {
       </div>
 
       <div className="mt-5 flex items-center">
-        <Button variant="primary" className="cursor-pointer px-14 py-4 my-5 rounded-lg bg-[#2B8572] text-[#ffffff]" type="button" title="Start Stand Up" onClick={() => (navigate(`/stand-up/${1}`))} />
+        <Button variant="primary" className="cursor-pointer px-14 py-4 my-5 rounded-lg bg-[#2B8572] text-[#ffffff]" type="button" title="Start Stand Up" onClick={() => (navigate(`/stand-up/${'start-standup'}`))} />
 
         {/* <Button variant="primary" className="cursor-pointer ml-3 px-14 py-4 my-5 rounded-lg bg-[#E71D36] text-[#ffffff]" type="button" title="End Stand Up" onClick={() => (true)} /> */}
       </div>

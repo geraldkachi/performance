@@ -1,198 +1,8 @@
-import { Table, Dropdown, Tag, DatePicker } from "antd";
+import { Table, Dropdown, Tag, DatePicker, Modal } from "antd";
 import { format } from "date-fns";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, NewStaff, NewTask } from "../../components";
-
-
-const candidature = [
-  {
-    key: "1",
-
-    name: (
-      <>
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">O M</span> {' '}
-          <span className="whitespace-nowrap">
-            Ope Mensorale
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold whitespace-nowrap">opemensorale@arvo.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<CheckCircleOutlined />} color="#87d068">
-            Valid
-          </Tag> */}
-          Dey Wait for Role
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          On Going
-        </div>
-      </>
-    )
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "3",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">L G</span> {' '}
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    email: (
-      <>
-        <div className="semibold">topgee@tate.com</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          Tech Lead
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-]
+import { Button, NewStaff, NewTask } from "../../components";
 
 const { RangePicker } = DatePicker;
 
@@ -316,11 +126,13 @@ const History = () => {
         />
       </div>
 
-      <Modal show={stateNewTask} closeModal={setStateNewTask}>
+      <Modal open={stateNewTask} onCancel={() => setStateNewTask(false)} footer={null} maskClosable={false}>
+      {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
         <NewTask {...{ setStateNewTask }} />
       </Modal>
 
-      <Modal show={stateNewStaff} closeModal={setStateNewStaff}>
+      <Modal open={stateNewStaff} onCancel={() => setStateNewStaff(false)} footer={null} maskClosable={false}>
+      {/* <Modal show={stateNewStaff} closeModal={setStateNewStaff}> */}
         <NewStaff {...{ setStateNewStaff }} />
       </Modal>
     </div>

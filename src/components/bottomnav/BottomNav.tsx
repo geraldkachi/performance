@@ -44,7 +44,7 @@ const BottomNav = () => {
           >
             <div className=""> {iconArr[index]}</div>
 
-            <span className={`origin-left duration-200 whitespace-nowrap`}>{item.title}</span>
+            <span className={`${!activeItem && "scale(0) hidden"}  origin-left duration-200 whitespace-nowrap`}>{item.title}</span>
           </Link>
         );
       })}

@@ -1,14 +1,15 @@
-import { Table } from "antd";
+import { Table, Modal } from "antd";
 import { useState } from "react";
 import { format } from "date-fns";
 import Chart from "react-apexcharts";
 import { useQuery } from "react-query";
 
-import Modal from "../../components/modal/Modal";
+// import Modal from "../../components/modal/Modal";
 import Button from "../../components/button/Button";
 import { getMetrics } from "../../server/base/metrix";
 import NewStaff from "../../components/otherComponents/NewStaff";
 import NewTask from "../../components/otherComponents/NewTask";
+import Metric from "../../components/otherComponents/Metric";
 interface columnsProps {
   title: string
   width: string,
@@ -75,6 +76,7 @@ const id = localStorage.getItem('staffId')
 const Home = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+  const [stateMetric, setStateMetric] = useState<boolean>(false);
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
   const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
   const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { keepPreviousData: true })
@@ -156,7 +158,7 @@ const Home = () => {
     },
     series: [
       {
-        name: "series-1",
+        name: "Performance Metrics Points/Scores",
         data: [20, 30, 40, 20, 100, 60, 70, 54],
       },
     ],
@@ -194,6 +196,9 @@ const Home = () => {
         height={'40%'}
       />
 
+
+      <div onClick={() => setStateMetric(true)}>Add Metric </div>
+
       <div className="mt-10 mb-20  overflow-x-auto">
         <Table
           rowClassName={(_record, index) => (index % 2 !== 0 ? "stripe" : "")}
@@ -215,12 +220,17 @@ const Home = () => {
         />
       </div>
 
-      <Modal show={stateNewTask} closeModal={setStateNewTask}>
+      <Modal open={stateNewTask} onCancel={() => setStateNewTask(false)} footer={null} maskClosable={false}>
+      {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
         <NewTask {...{ setStateNewTask }} />
       </Modal>
 
-      <Modal show={stateNewStaff} closeModal={setStateNewStaff}>
+      <Modal open={stateNewStaff} onCancel={() => setStateNewStaff(false)} footer={null} maskClosable={false} closable={true} afterClose={() => setStateNewStaff(false)}>
+      {/* <Modal show={stateNewStaff} closeModal={setStateNewStaff}> */}
         <NewStaff {...{ setStateNewStaff }} />
+      </Modal>
+      <Modal open={stateMetric} onCancel={() => setStateMetric(false)} footer={null} maskClosable={false} closable={true} afterClose={() => setStateMetric(false)}>
+        <Metric {...{ setStateMetric }} />
       </Modal>
     </div>
   )

@@ -15,6 +15,9 @@ import Home from './pages/home/Home';
 import StandUpDetail from './pages/standUp-detail/StandUpDetail';
 import Login from './pages/login/Login';
 import ResetPassword from './pages/reset-password/ResetPassword';
+import UnProtectedRoutes from './routers/UnProtectedRoutes';
+import UnAuthLayout from './components/layout/UnAuthLayout';
+import StandUpDetailEnd from './pages/standUp-detail/StandUpDetailEnd';
 
 const App: React.FC = () => {
   const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
@@ -23,17 +26,15 @@ const App: React.FC = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-        refetchOnReconnect: false,
-        retry: false,
+        // refetchOnWindowFocus: false,
+        // refetchOnMount: false,
+        // refetchOnReconnect: false,
+        // retry: false,
         staleTime: twentyFourHoursInMs,
       },
     },
   })
   ref.current = queryClient;
-
-
 
   return (
     <>
@@ -41,8 +42,12 @@ const App: React.FC = () => {
         <ToastContainer />
         <Suspense fallback={"Loading"}>
           <Routes>
-            <Route path='/' element={<Login />} />
-            <Route path='/reset' element={<ResetPassword />} />
+              <Route element={<UnAuthLayout />}>
+            <Route element={<UnProtectedRoutes />}>
+                <Route path='/' element={<Login />} />
+                <Route path='/reset' element={<ResetPassword />} />
+            </Route>
+              </Route>
 
             {/* Protected Roues */}
             <Route element={<ProtectedRoutes />}>
@@ -55,6 +60,7 @@ const App: React.FC = () => {
                 <Route path="/history/:id" element={<HistoryDetail />} />
                 <Route path="/stand-up" element={<StandUp />} />
                 <Route path="/stand-up/:id" element={<StandUpDetail />} />
+                <Route path="/stand-up/end" element={<StandUpDetailEnd />} />
               </Route>
             </Route>
             {/* 404 page */}

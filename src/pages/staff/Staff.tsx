@@ -1,11 +1,11 @@
-import { Table } from "antd";
+import { Table, Modal } from "antd";
 import { useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 import { getStaffs } from "../../server/base";
-import { Button, Modal, NewStaff, NewTask } from "../../components";
+import { Button, NewStaff, NewTask } from "../../components";
 
 
 
@@ -58,9 +58,7 @@ const columns = [
     },
     {
       title: 'ID',
-      // dataIndex: 'id',
       width: '5%',
-      // align: 'start',
       render: (val: any) => (
         <span className="capitalize whitespace-nowrap text-start cursor-pointer" onClick={() => navigate(`/staff/${val?.id}`)}>{`${val?.id}`}</span>
         ),
@@ -105,14 +103,14 @@ const columns = [
         />
       </div>
 
-      <div onClick={() => navigate(`/staff/${1}`)}>Staff Detail</div>
+      {/* <div onClick={() => navigate(`/staff/${1}`)}>Staff Detail</div> */}
 
-
-      <Modal show={stateNewTask} closeModal={setStateNewTask}>
+      <Modal open={stateNewTask} onCancel={() => setStateNewTask(false)} footer={null} maskClosable={false}>
+      {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
         <NewTask {...{ setStateNewTask }} />
       </Modal>
-
-      <Modal show={stateNewStaff} closeModal={setStateNewStaff}>
+      <Modal open={stateNewStaff} onCancel={() => setStateNewStaff(false)} footer={null} maskClosable={false}>
+      {/* <Modal show={stateNewStaff} closeModal={setStateNewStaff}> */}
         <NewStaff {...{ setStateNewStaff }} />
       </Modal>
     </div>

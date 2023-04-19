@@ -43,8 +43,7 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
       lastName,
       email: e.target["email"].value,
       role: state,
-      // role: e.target["role"].value,
-      phoneNumber: (e.target["phone"].value).replace(/ /g, ''),
+      phoneNumber: (e.target["phoneNumber"].value).replace(/ /g, ''),
     };
 
     schema
@@ -69,18 +68,6 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
       <div className="flex items-center justify-between mb-10">
         <span className="font-bold text-xl sm:text-4xl">New Staff</span>
 
-        <svg onClick={() => setStateNewStaff(false)} className='cursor-pointer' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_10206_90642)">
-            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#668A99" />
-          </g>
-          <defs>
-            <clipPath id="clip0_10206_90642">
-              <rect width="24" height="24" fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
-
-
       </div>
       <form onSubmit={onFinish}>
         <Input label='Name' name='name' ref={formInput} type="text" placeholder="Name" />
@@ -89,9 +76,9 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
         />
         {/* <Input label='Position' ref={formInput} name='role' type="text" placeholder="Position" /> */}
         <div className="mt-5">
-            <div className="">
-              <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">Status</label>
-            </div>
+          <div className="">
+            <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">Status</label>
+          </div>
           <Select
             placeholder="Select Status"
             style={{ width: "100%" }}
@@ -100,15 +87,14 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
             options={rolesOption}
             className="mb-3"
           />
-          </div>
+        </div>
+        <Input label='Phone' ref={formInput} name='phoneNumber' type="tel" placeholder="Phone Number" />
         <Input label='Password' ref={formInput} name='password' type="password" placeholder="Password" />
 
-        <Input label='phone' ref={formInput} name='phone' type="tel" placeholder="Phone Number" />
 
 
         <div className="flex items-center justify-center">
           <Button className="text-center rounded-lg mt-5 w-full" loading={mutation.isLoading} type="submit" title="Add New Staff"
-            // onClick={() => setStateNewStaff(false)}
           />
         </div>
       </form>
