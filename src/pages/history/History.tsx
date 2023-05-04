@@ -3,6 +3,8 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, NewStaff, NewTask } from "../../components";
+import { useQuery } from "react-query";
+import { getStandUp } from "../../server/base/standup";
 
 const { RangePicker } = DatePicker;
 
@@ -13,31 +15,34 @@ const History = () => {
   const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
   const [filter, setFilter] = useState({ fromDate: "", toDate: "" });
 
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
+  const { data, isLoading, isFetching } = useQuery(["getStandUp", limit, page], () => getStandUp(limit))
+
+  console.log(data?.data?.standup, 'history',)
 
   const columns = [
     {
       title: 'Stand Up Date',
-      dataIndex: 'email',
-      // render: (data: any) => (
-      //   <span
-      //     className="text-[#A362F8] underline cursor-pointer"
-      //     onClick={() => navigate(`/history/${1}`)}
-      //   >
-      //     {data?.reference}
-      //   </span>
-      // ),
+      // dataIndex: 'startTime',
+      render: (val: any) => (
+        <span onClick={() => navigate(`/history/${val?.id}`)}  className="cursor-pointer capitalize whitespace-nowrap">{`${val?.createdAt ? format(new Date(val?.createdAt), "dd MMMM yyyy, hh:mm a") : "--/--/----"}`}</span>
+      ),
       width: '10%',
       align: 'center',
     },
     {
       title: 'Participants',
-      dataIndex: 'email',
+      dataIndex: 'creator',
       width: '10%',
       align: 'center',
     },
     {
       title: 'Tasks',
-      dataIndex: 'role',
+      render: (val: any) => (
+        <span onClick={() => navigate(`/history/${val?.id}`)}  className="cursor-pointer capitalize whitespace-nowrap">{`--/--/----`}</span>
+      ),
       width: '20%',
       align: 'center',
     },
@@ -98,7 +103,6 @@ const History = () => {
       </div>
 
 
-<div onClick={() => navigate(`/history/${1}`)}>History Detail</div>
 
       <div className="mt-10 mb-20 overflow-x-auto">
         <Table
@@ -118,10 +122,14 @@ const History = () => {
           // rowKey={(record) => record?.id}
 
           size="small"
-          rowKey="id"
-          pagination={false}
+          loading={isLoading || isFetching}
           columns={columns}
-          dataSource={[]}
+          dataSource={data?.data?.standup}
+          pagination={{
+            position: ["bottomRight"],
+            current: page,
+            total: data?.data?.count,
+          }}
           style={{ marginTop: '20px' }}
         />
       </div>

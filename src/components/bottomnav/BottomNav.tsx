@@ -1,14 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import HistoryIcon from "../../assets/svg/HistoryIcon";
-import HomeIcon from "../../assets/svg/HomeIcon";
-import StandUpIcon from "../../assets/svg/StandUpIcon";
-import TaskIcon from "../../assets/svg/TaskIcon";
 
-// import AdministratorIcon from "../assets/svg/AdministratorIcon";
-// import HistoryIcon from "../assets/svg/HistoryIcon";
-// import DisburseIcon from "../assets/svg/DisburseIcon";
-// import { isAuthorised } from "../utils";
-// import ReportIcon from "../assets/svg/ReportIcon";
+import TaskIcon from "../../assets/svg/TaskIcon";
+import HomeIcon from "../../assets/svg/HomeIcon";
+import HistoryIcon from "../../assets/svg/HistoryIcon";
+import StandUpIcon from "../../assets/svg/StandUpIcon";
 
 const BottomNav = () => {
   const location = useLocation();
@@ -40,7 +35,7 @@ const BottomNav = () => {
             to={item.route}
             key={index}
             className={`${activeItem && "text-white rounded-2xl bg-[#2B8572] w-max whitespace-nowrap"
-              } flex justify-evenly flex-1 gap-x-4 items-center rounded-full px-3 py-2 cursor-pointer my-3  text-base space-x-1`}
+              } flex justify-evenly flex-1 gap-x-1 items-center rounded-full px-3 py-2 cursor-pointer my-3  text-base space-x-1`}
           >
             <div className=""> {iconArr[index]}</div>
 

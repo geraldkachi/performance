@@ -1,17 +1,23 @@
-import { Table, Dropdown, Tag, DatePicker } from "antd";
+import { Table, Dropdown, Tag, DatePicker, Modal } from "antd";
 import { format } from "date-fns";
 import { useState } from "react";
-import { Button, Modal, NewStaff, NewTask } from "../../components";
+import { Button, NewStaff, NewTask } from "../../components";
+import { useParams } from "react-router-dom";
+import { getMetrics } from "../../server/base/metrix";
+import { useQuery } from "react-query";
 
 
 const columns = [
   {
     title: (
       <>
-        <div className="semibold">Staff Name</div>
+        <div className="semibold whitespace-nowrap">Staff Name</div>
       </>
     ),
-    dataIndex: 'name',
+    // dataIndex: 'staffName',
+    render: (val: {staffName: string}) => (
+      <span className="whitespace-nowrap">{val?.staffName}</span>
+    ),
     width: '10%',
     align: 'center',
   },
@@ -21,7 +27,10 @@ const columns = [
         <div className="semibold whitespace-nowrap">Joins Early</div>
       </>
     ),
-    dataIndex: 'join',
+    // dataIndex: 'joinedEarly',
+    render: (val:{ joinedEarly: string}) => (
+      <span>{val?.joinedEarly === "true" ? "True" : "False"}</span>
+    ),
     width: '10%',
     align: 'center',
   },
@@ -31,226 +40,69 @@ const columns = [
         <div className="semibold whitespace-nowrap">Present in Meeting</div>
       </>
     ),
-    dataIndex: 'role',
+    // dataIndex: 'completedMeeting',
+    render: (val: {completedMeeting: string}) => (
+      <span>{val?.completedMeeting === "true" ? "True" : "False"}</span>
+    ),
     width: '20%',
     align: 'center',
   },
   {
     title: 'Participation',
-    dataIndex: 'role',
+    // dataIndex: 'participation',
+    render: (val: {participation: string}) => (
+      <span>{val?.participation}</span>
+    ),
     width: '20%',
     align: 'center',
   },
   {
     title: 'Attendance',
-    dataIndex: 'role',
+    // dataIndex: 'attendedMeeting',
+    render: (val: {attendedMeeting: string}) => (
+      <span>{val?.attendedMeeting === 'true' ? "True" : "False"}</span>
+    ),
     width: '20%',
     align: 'center',
   },
   {
     title: 'Task',
-    dataIndex: 'role',
+    // dataIndex: 'role',
+    render: () => (
+      <span className="whitespace-nowrap">{'--/--/----'}</span>
+    ),
     width: '20%',
     align: 'center',
   },
   {
     title: 'Percentage',
-    dataIndex: 'role',
+    dataIndex: 'review',
     width: '20%',
     align: 'center',
   },
 ];
 
-const candidature = [
-  {
-    key: "1",
-
-    name: (
-      <>
-        <div className="avatar-info flex items-center">
-          <span className="whitespace-nowrap">
-            Ope Mensorale
-          </span>
-        </div>
-      </>
-    ),
-    join: (
-      <>
-        <div className="semibold">yes</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<CheckCircleOutlined />} color="#87d068">
-            Valid
-          </Tag> */}
-          50%
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          On Going
-        </div>
-      </>
-    )
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    join: (
-      <>
-        <div className="semibold">yes</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          50%
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "3",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-        <div className="avatar-info flex items-center">
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    join: (
-      <>
-        <div className="semibold">yes</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          50%
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <div className="avatar-info">
-
-        </div>
-
-        <div className="avatar-info flex items-center">
-          <span>
-            <>Lord Gerald</>
-          </span>
-        </div>
-      </>
-    ),
-    join: (
-      <>
-        <div className="semibold">yes</div>
-      </>
-    ),
-    role: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          {/* <Tag icon={<>Baba God Dey Give </>} */}
-          {/* // color="#108ee9" */}
-          {/* > */}
-          50%
-          {/* </Tag> */}
-        </div>
-      </>
-    ),
-    task: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Yes
-        </div>
-      </>
-    ),
-    status: (
-      <>
-        <div className="ant-progress-project whitespace-nowrap">
-          Finished
-        </div>
-      </>
-    )
-  },
-]
 
 const { RangePicker } = DatePicker;
 
 const HistoryDetail = () => {
+  const { id } = useParams()
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
   const [dates, setDates] = useState<string[]>([]);
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
 
+  const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { keepPreviousData: true })
+
+  console.log(data?.data, 'metrics')
+
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onLimitChange = (limit: number) => {
+    setLimit(limit);
+  };
 
   return (
     <div>
@@ -290,14 +142,25 @@ const HistoryDetail = () => {
           rowKey="id"
           pagination={false}
           columns={columns}
-          dataSource={candidature}
+          dataSource={data?.data}
+          loading={isLoading || isFetching}
+          pagination={{
+            position: ["bottomRight"],
+            current: page,
+            total: data?.data?.count,
+            pageSize: limit,
+            showSizeChanger: true,
+            onShowSizeChange: onLimitChange,
+            onChange: onPageChange,
+          }}
           style={{ marginTop: '20px' }}
         />
       </div>
 
 
+      <Modal open={stateNewTask} onCancel={() => setStateNewTask(false)} footer={null} maskClosable={false} closable={true} afterClose={() => setStateNewTask(false)}>
 
-      <Modal show={stateNewTask} closeModal={setStateNewTask}>
+      {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
         <NewTask {...{ setStateNewTask }} />
       </Modal>
     </div>

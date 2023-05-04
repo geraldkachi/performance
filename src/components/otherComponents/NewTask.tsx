@@ -9,8 +9,6 @@ import { createTask } from "../../server/base/task";
 import { getStaffs } from "../../server/base";
 import { Select } from "antd";
 
-
-
 interface Props {
   setStateNewTask: Dispatch<SetStateAction<boolean>>
 }
@@ -33,12 +31,14 @@ const NewTask = ({ setStateNewTask }: Props) => {
 
   const mutation = useMutation(createTask)
 
+  const staffId = localStorage.getItem('staffId')
+
   const onFinish = (e: FormEvent) => {
     e.preventDefault()
 
     const values = {
       name:e.target["name"].value,
-      staffId: "2a7e33bd-2e83-4dd4-81b3-9d337bece591",
+      staffId,
       endDate: e.target["enddate"].value,
       startDate: e.target["startdate"].value,
       assignedBy: "2a7e33bd-2e83-4dd4-81b3-9d337bece591",

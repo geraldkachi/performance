@@ -3,9 +3,9 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-
 import { Button } from "../../components";
 import { getStandUp } from "../../server/base/standup";
+
 
 const columns = [
   {
@@ -70,7 +70,7 @@ const StandUp = () => {
     setPage(page);
   };
 
-  const onLimitChange = (_: any, limit: number) => {
+  const onLimitChange = (limit: number) => {
     setLimit(limit);
   };
 
@@ -109,6 +109,12 @@ const StandUp = () => {
           }}
           rowKey={(record) => record?.id}
           style={{ marginTop: '20px' }}
+          onRow={(val) => ({
+            onClick: () => {
+              navigate(`/stand-up/${val?.id}`)
+              }
+          })
+          }
         />
       </div>
     </div>

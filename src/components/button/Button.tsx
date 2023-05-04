@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 
 const Spinner = () =>
-    <div className=" flex items-center justify-center">
+    <div className=" flex items-center justify-center px-10 py-[2px]">
         <div className="w-5 h-5 border-4 border-dashed rounded-full animate-spin border-[#ffffff]" />
     </div>
 

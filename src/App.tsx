@@ -18,6 +18,7 @@ import ResetPassword from './pages/reset-password/ResetPassword';
 import UnProtectedRoutes from './routers/UnProtectedRoutes';
 import UnAuthLayout from './components/layout/UnAuthLayout';
 import StandUpDetailEnd from './pages/standUp-detail/StandUpDetailEnd';
+import Statistics from './pages/statistics/Statistics';
 
 const App: React.FC = () => {
   const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
@@ -26,10 +27,10 @@ const App: React.FC = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        // refetchOnWindowFocus: false,
-        // refetchOnMount: false,
-        // refetchOnReconnect: false,
-        // retry: false,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        retry: false,
         staleTime: twentyFourHoursInMs,
       },
     },
@@ -59,8 +60,9 @@ const App: React.FC = () => {
                 <Route path="/history" element={<History />} />
                 <Route path="/history/:id" element={<HistoryDetail />} />
                 <Route path="/stand-up" element={<StandUp />} />
-                <Route path="/stand-up/:id" element={<StandUpDetail />} />
-                <Route path="/stand-up/end" element={<StandUpDetailEnd />} />
+                <Route path="/stand-up/start-standup" element={<StandUpDetail />} />
+                <Route path="/stand-up/:id" element={<StandUpDetailEnd />} />
+                <Route path="/statistics" element={<Statistics />} />
               </Route>
             </Route>
             {/* 404 page */}

@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 
 // import Modal from "../../components/modal/Modal";
 import Button from "../../components/button/Button";
-import { getMetrics } from "../../server/base/metrix";
+import { getMetrics, getOverallPerformance } from "../../server/base/metrix";
 import NewStaff from "../../components/otherComponents/NewStaff";
 import NewTask from "../../components/otherComponents/NewTask";
 import Metric from "../../components/otherComponents/Metric";
@@ -16,70 +16,102 @@ interface columnsProps {
   align: string
   dataIndex: string,
 }
-const columns: columnsProps[] | any = [
-  {
-    title: 'Staff Name',
-    dataIndex: 'name',
-    width: '10%',
-    align: 'center',
-  },
-  {
-    title: 'Email Address',
-    dataIndex: 'email',
-    width: '10%',
-    align: 'center',
-  },
-  {
-    title: 'Role',
-    dataIndex: 'role',
-    width: '20%',
-    align: 'center',
-  },
-  {
-    title: 'Tasks',
-    dataIndex: 'task',
-    width: '5%',
-    align: 'center',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    width: '12%',
-    align: 'center',
-  },
 
-  // {
-  //   title: 'Actions',
-  //   width: '5%',
-  //   align: 'center',
-  //   dataIndex: 'taco',
-  //   render: (_, value) => <Button type="link" onClick={() => null} />
-  //   // render: (_, value) => <Button type="link" icon={<EditOutlined />} onClick={() => this.showEditModal(value)}/>
-  // }, // responsive: [
-  //   {
-  //     breakpoint: 480,
-  //     options: {
-  //       chart: {
-  //         width: 200
-  //       },
-  //       legend: {
-  //         position: "bottom"
-  //       }
-  //     }
-  //   }
-  // ]
-
-];
-
-const id = localStorage.getItem('staffId')
+const id = localStorage.getItem('standupId')
 
 const Home = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [stateMetric, setStateMetric] = useState<boolean>(false);
+  const [grabId, setGrabID] = useState<string>('');
   const [stateNewTask, setStateNewTask] = useState<boolean>(false)
   const [stateNewStaff, setStateNewStaff] = useState<boolean>(false)
   const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { keepPreviousData: true })
+  const { data: overall, isLoading: isLoadingOverall } = useQuery(["overall"], () => getOverallPerformance(), { keepPreviousData: true })
+
+  console.log(overall, 'overall')
+
+  const columns: columnsProps[] | any = [
+    {
+      title: 'Staff Name',
+      render: (val: { staffName: string, id: string }) => (
+        <span className="cursor-pointer" onClick={() => {
+          setStateMetric(true)
+          setGrabID(val?.id)
+          console.log(val?.id)
+        }}>{val?.staffName}</span>
+      ),
+      width: '10%',
+      align: 'center',
+    },
+    {
+      title: 'Review',
+      render: (val: { review: string, id: string }) => (
+        <span className="cursor-pointer" onClick={() => {
+          setStateMetric(true)
+          setGrabID(val?.id)
+        }
+        }>{val?.review}</span>
+      ),
+      width: '10%',
+      align: 'center',
+    },
+    {
+      title: 'Participation',
+      dataIndex: 'participation',
+      width: '20%',
+      align: 'center',
+    },
+    {
+      title: 'Attended Meeting',
+      dataIndex: 'attendedMeeting',
+      render: (val: { attendedMeeting: boolean, id: string }) => (
+        <span className="cursor-pointer" onClick={() => {
+          setStateMetric(true)
+          setGrabID(val?.id)
+        }
+        }>{val?.attendedMeeting === true ? 'True' : "False"}</span>
+      ),
+      width: '5%',
+      align: 'center',
+    },
+    {
+      title: 'Completed Meeting',
+      dataIndex: 'completedMeeting',
+      render: (val: { completedMeeting: boolean, id: string }) => (
+        <span className="cursor-pointer" onClick={() => {
+          setStateMetric(true)
+          setGrabID(val?.id)
+        }}>{val?.completedMeeting === true ? 'True' : "False"}</span>
+      ),
+      width: '12%',
+      align: 'center',
+    },
+
+    // {
+    //   title: 'Actions',
+    //   width: '5%',
+    //   align: 'center',
+    //   dataIndex: 'taco',
+    //   render: (_, value) => <Button type="link" onClick={() => null} />
+    //   // render: (_, value) => <Button type="link" icon={<EditOutlined />} onClick={() => this.showEditModal(value)}/>
+    // }, // responsive: [
+    //   {
+    //     breakpoint: 480,
+    //     options: {
+    //       chart: {
+    //         width: 200
+    //       },
+    //       legend: {
+    //         position: "bottom"
+    //       }
+    //     }
+    //   }
+    // ]
+
+  ];
+
+  // console.log(data, 'metrics all')
 
   const state = {
 
@@ -87,16 +119,7 @@ const Home = () => {
       responsive: [{
         breakpoint: 1000,
         yaxis: {
-          categories: [
-            "Gerald",
-            "Kingsley",
-            "Ope",
-            "Dare",
-            "Akan",
-            "Prince",
-            "Shaguy",
-            "Tolulope",
-          ],
+          categories:  overall?.data.map(i => i.staffName),
         },
         options: {
           plotOptions: {
@@ -144,22 +167,14 @@ const Home = () => {
         show: false,
       },
       xaxis: {
-        categories: [
-          "Gerald",
-          "Kingsley",
-          "Ope",
-          "Dare",
-          "Akan",
-          "Prince",
-          "Shaguy",
-          "Tolulope",
-        ],
+        categories: overall?.data.map(i => i.staffName),
       },
     },
     series: [
       {
         name: "Performance Metrics Points/Scores",
-        data: [20, 30, 40, 20, 100, 60, 70, 54],
+        // data: [20, 30, 40, 20, 100, 60, 70, 54],
+        data: overall?.data.map(i => i.percent),
       },
     ],
   };
@@ -168,7 +183,7 @@ const Home = () => {
     setPage(page);
   };
 
-  const onLimitChange = (_: any, limit: number) => {
+  const onLimitChange = (limit: number) => {
     setLimit(limit);
   };
 
@@ -221,17 +236,17 @@ const Home = () => {
       </div>
 
       <Modal open={stateNewTask} onCancel={() => setStateNewTask(false)} footer={null} maskClosable={false}>
-      {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
+        {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
         <NewTask {...{ setStateNewTask }} />
       </Modal>
 
       <Modal open={stateNewStaff} onCancel={() => setStateNewStaff(false)} footer={null} maskClosable={false} closable={true} afterClose={() => setStateNewStaff(false)}>
-      {/* <Modal show={stateNewStaff} closeModal={setStateNewStaff}> */}
+        {/* <Modal show={stateNewStaff} closeModal={setStateNewStaff}> */}
         <NewStaff {...{ setStateNewStaff }} />
       </Modal>
-      <Modal open={stateMetric} onCancel={() => setStateMetric(false)} footer={null} maskClosable={false} closable={true} afterClose={() => setStateMetric(false)}>
-        <Metric {...{ setStateMetric }} />
-      </Modal>
+      {/* <Modal open={stateMetric} onCancel={() => setStateMetric(false)} footer={null} maskClosable={false} closable={true} afterClose={() => setStateMetric(false)}>
+        <Metric {...{ setStateMetric, grabId }} />
+      </Modal> */}
     </div>
   )
 }

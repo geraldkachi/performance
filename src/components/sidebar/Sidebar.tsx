@@ -33,6 +33,7 @@ const Sidebar = () => {
     { route: "/staff", title: "Staff" },
     { route: "/history", title: "History" },
     { route: "/stand-up", title: "Stand-up" },
+    { route: "/statistics", title: "Statistics" },
     // ...(isAuthorised("super-admin")
     //   ? [{ route: "/administrator", title: "Administrator" }]
     //   : []),

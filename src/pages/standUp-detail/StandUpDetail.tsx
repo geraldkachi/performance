@@ -1,21 +1,22 @@
 import * as yup from "yup";
+import { Select } from "antd";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FormEvent, useRef, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 
+
 import { Button } from "../../components";
+import { getStaffs } from "../../server/base";
 import Input from "../../components/input/Input";
 import { createStandUp } from "../../server/base/standup";
-import { toast } from "react-toastify";
-import { getStaffs } from "../../server/base";
-import { Select } from "antd";
 
 let schema = yup.object().shape({});
 
 const StandUpDetail = () => {
   const navigate = useNavigate()
-  const [state, setState] = useState(null);
+  const [state, setState] = useState([]);
   const [role, setRole] = useState<string>("");
   const formInput = useRef<HTMLInputElement>(null)
 
@@ -25,27 +26,31 @@ const StandUpDetail = () => {
 
   const mutation = useMutation(createStandUp)
   const { data, isLoading, isFetching } = useQuery(["getStaffs", limit, page], () => getStaffs(limit, page), { keepPreviousData: true })
-  console.log(data?.data?.staff, 'getStaffs')
-  console.log(state, 'getStaffs state')
+  // console.log(data?.data?.staff, 'getStaffs')
+  // console.log(state, 'getStaffs state')
 
+  // console.log(state, 'setState(e)')
 
   const onFinish = (e: FormEvent) => {
     e.preventDefault()
 
     let values = {
       title: e.target["title"].value,
-      participants: [state],
+      participants: state,
     }
 
-    console.log(values, 'values')
+    // console.log(values, 'values')
 
     schema
       .validate(values)
-      .then((_val) => {
+      .then(() => {
         mutation.mutate(values, {
           onSuccess: (data) => {
+            console.log(data?.data, 'validated successfully standup created');
+          localStorage.setItem('standupId', data?.data?.id)
             toast.success(data?.message)
-            values = {title: '', participants: []}
+            values = { title: '', participants: [] }
+            navigate(`/stand-up/${data?.data?.id}`)
           },
           onError: (e: unknown) => {
             if (e instanceof Error) {
@@ -85,12 +90,21 @@ const StandUpDetail = () => {
             <Select
               placeholder="Select Participation"
               style={{ width: "100%" }}
+              mode="multiple"
               size="large"
+              allowClear
               loading={ isLoading || isFetching}
               value={state}
-              onSelect={(e) => setState(e)}
+              // onSelect={(e) => setState(e)}
+              onChange={e => {
+                console.log(e, 'eeeeee')
+                setState(e)
+              }}
+              // onSelect={(e: string[]) => {
+              //   setState(e)
+              // }}
               options={data &&
-                data?.data?.staff?.map((val) => {
+                data?.data?.staff?.map((val: {firstName: string, lastName: string, id: string}) => {
                   const temp = {
                     value: val?.id,
                     label: `${val?.firstName} ${val?.lastName}`,
@@ -99,6 +113,15 @@ const StandUpDetail = () => {
                 })}
               className="mb-3 py-3"
             />
+             {/* <Select
+      mode="multiple"
+      allowClear
+      style={{ width: '100%' }}
+      placeholder="Please select"
+      defaultValue={['a10', 'c12']}
+      onChange={handleChange}
+      options={options}
+    /> */}
             {/* <Select
               style={{ width: "100%" }}
               size="large"
