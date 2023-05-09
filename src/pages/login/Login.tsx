@@ -26,7 +26,6 @@ const Login = () => {
     const otpRef = useRef<HTMLInputElement>(null);
     const formInput = useRef<HTMLInputElement>(null)
     const [isOtp, setIsOtp] = useState<boolean>(false);
-    const [showPassword, setShowPassword] = useState(false);
 
 
     const mutation = useMutation(login, {
@@ -69,9 +68,6 @@ const Login = () => {
             .validate(values)
             .then((_val) => {
                 mutation.mutate(values, {
-                    onSuccess: (data) => {
-
-                    },
                     onError: (e: unknown) => {
                         if (e instanceof Error) {
                             toast.error(e.message)

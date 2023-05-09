@@ -39,12 +39,14 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
 
     const values: CreateStaffType = {
       password: e.target["password"].value,
-      firstName,
-      lastName,
+      firstName: e.target["firstName"].value,
+      lastName: e.target["lastName"].value,
       email: e.target["email"].value,
       role: state,
       phoneNumber: (e.target["phoneNumber"].value).replace(/ /g, ''),
     };
+
+    console.log(values, 'values')
 
     schema
       .validate(values)
@@ -70,7 +72,8 @@ const NewStaff = ({ setStateNewStaff }: Props) => {
 
       </div>
       <form onSubmit={onFinish}>
-        <Input label='Name' name='name' ref={formInput} type="text" placeholder="Name" />
+        <Input label='Name' name='firstName' ref={formInput} type="text" placeholder="First Name" />
+        <Input label='Name' name='lastName' ref={formInput} type="text" placeholder="Last Name" />
         <Input label='Email Address' ref={formInput} name='email' placeholder='Email Address' type="email"
         // className="w-full border border-[#C2D0D6] p-3 rounded-lg focus:outline-[#2B8572]" divStyle="mt-5"
         />

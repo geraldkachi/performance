@@ -14,19 +14,19 @@ const Statistics = () => {
       width: '10%',
       render: (val: any) => (
         <div className=" flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">
-          </span>
-          <span className="capitalize whitespace-nowrap">{`${val?.title}`}</span>
+          {/* <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">
+          </span> */}
+          <span className="capitalize whitespace-nowrap">{`${val?.staffId}`}</span>
         </div>
       ),
     },
-    {
-      title: 'Creator Id',
-      width: '10%',
-      render: (val: any) => (
-        <span className="capitalize whitespace-nowrap">{`${val?.creator}`}</span>
-      )
-    },
+    // {
+    //   title: 'Creator Id',
+    //   width: '10%',
+    //   render: (val: any) => (
+    //     <span className="capitalize whitespace-nowrap">{`${val?.creator}`}</span>
+    //   )
+    // },
   ]
 
   return (

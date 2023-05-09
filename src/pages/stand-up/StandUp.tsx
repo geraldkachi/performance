@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { useState } from "react";
 import { format } from "date-fns";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components";
 import { getStandUp } from "../../server/base/standup";
@@ -59,6 +59,7 @@ const columns = [
 
 const StandUp = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
@@ -112,6 +113,7 @@ const StandUp = () => {
           onRow={(val) => ({
             onClick: () => {
               navigate(`/stand-up/${val?.id}`)
+              queryClient.invalidateQueries('getStandUpOne')
               }
           })
           }

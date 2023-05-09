@@ -1,5 +1,5 @@
 import { Modal, Spin, Table } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,56 +15,7 @@ interface columnsProps {
   align: string
   dataIndex: string,
 }
-///////////////////////////////
-// const columns = [
-//   {
-//     title: 'Staff Name',
-//     // dataIndex: 'title',
-//     width: '10%',
-//     render: (val: any) => (
-//       <div className=" flex items-center">
-//         <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">
-//           {/* {`${val?.title
-//               .split(' ')[0]
-//               .charAt(0)}${val?.title
-//                 .split(' ')[1]
-//                 .charAt(0)}`} */}
-//         </span>
-//         <span className="capitalize whitespace-nowrap">{`${val?.title}`}</span>
-//       </div>
-//     ),
-//   },
-//   {
-//     title: 'Creator Id',
-//     // dataIndex: 'creator',
-//     width: '10%',
-//     // align: 'center',
-//     render: (val: any) => (
-//       <span className="capitalize whitespace-nowrap">{`${val?.creator}`}</span>
-//     )
-//   },
-//   {
-//     title: 'Created At',
-//     // dataIndex: 'createdAt',
-//     width: '20%',
-//     // align: 'center',
-//     render: (val: any) => (
-//       <span className="capitalize whitespace-nowrap">{`${val?.createdAt ? format(new Date(val?.createdAt), "dd MMMM yyyy, hh:mm a") : "--/--/----"}`}</span>
-//     )
-//   },
-//   // {
-//   //   title: 'Tasks',
-//   //   dataIndex: 'task',
-//   //   width: '5%',
-//   //   align: 'center',
-//   // },
-//   // {
-//   //   title: 'Status',
-//   //   dataIndex: 'status',
-//   //   width: '12%',
-//   //   align: 'center',
-//   // },
-// ];
+
 const StandUpDetailEnd = () => {
   const { id } = useParams()
   const queryClient = useQueryClient();
@@ -77,22 +28,18 @@ const StandUpDetailEnd = () => {
   const [participantId, setParticipantId] = useState<string>('');
 
 
-
   // const { data, isLoading, isFetching } = useQuery(["getStandUp", limit, page], () => getStandUp(10))
-  const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { keepPreviousData: true })
+  const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { refetchOnMount: true})
 
-  const { data: oneData, isLoading: isLoadingOne, isFetching: isFetchingOne } = useQuery(["getStandUpOne", limit, page], () => getStandUpOne(id))
+  const { data: oneData, isLoading: isLoadingOne, isFetching: isFetchingOne } = useQuery(["getStandUpOne", limit, page], () => getStandUpOne(id), { refetchOnMount: true})
+  useEffect(() => {
+   (oneData?.data && data)
+},[oneData?.data, id])
   const columns: columnsProps[] | any = [
     {
       title: 'Staff Name',
       render: (val: { name: string, id?: string }) => (
-        <span className="cursor-pointer" onClick={() => {
-          // (!oneData?.data?.endDate === null && setStateMetric(true))
-          // setStateMetric(true)
-          // setParticipantId(val?.id)
-          // console.log(val, '222')
-          // console.log(val?.id)
-        }}>{val?.name}</span>
+        <span className="cursor-pointer">{val?.name}</span>
       ),
       width: '10%',
       align: 'center',
@@ -114,12 +61,13 @@ const StandUpDetailEnd = () => {
 
   ];
   // console.log(oneData?.data, 'dtatatatat')
-  // console.log(data?.data, 'Metric>')
+  console.log(data?.data, 'Metric>')
 
   const { mutate, isLoading: mutateLoading } = useMutation(endStandUpUpdate, {
     onSuccess: (res) => {
       toast.success(res?.message);
-      // navigate('/stand-up')
+      navigate('/stand-up')
+      queryClient.invalidateQueries('getMetrics')
     },
     onError: (e: Error) => {
       toast?.error(e?.message);
@@ -137,22 +85,28 @@ const StandUpDetailEnd = () => {
 
   // console.log(oneData, 'oneData')
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: record => ({
-      disabled: record.name === 'Disabled User', // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  //   },
+  //   getCheckboxProps: record => ({
+  //     disabled: record.name === 'Disabled User', // Column configuration not to be checked
+  //     name: record.name,
+  //   }),
+  // };
 
-  console.log(oneData?.data?.endTime, 'oneData?.data?.endTime')
+  // console.log(oneData?.data?.endTime, 'oneData?.data?.endTime')
   return (
     <div>
       <div className="mt-5 flex items-center justify-between">
         <div className="text-right">{format(new Date(), "dd MMMM yyyy, hh:mm a")}</div>
       </div>
+
+      <div className="mt- flex items-start justify-between  w-full ">
+        <div></div>
+        <div className="mt-10 flex items-end text-left sm:text-3xl text-xl bg-[##141C1F] capitalize">End Time: {format(new Date(!oneData?.data?.endTime === null && oneData?.data?.endTime), "dd MMMM yyyy, hh:mm a")}</div>
+      </div>
+
 
       {isLoadingOne ? <Spin />
         :
@@ -201,6 +155,7 @@ const StandUpDetailEnd = () => {
             onClick: () => {
               if (!oneData?.data?.endTime) {
                 setParticipantId(val?.id)
+                queryClient.invalidateQueries('getMetric')
                 setStateMetric(true)
               }
             },
