@@ -1,6 +1,6 @@
 .ant-table-thead .ant-table-cell {
   background-color: #e7e8f0 !important;
-  padding: 20px 0 !important;
+  padding: 20px 10px !important;
   margin: 20px 0 !important;
 }
 /* data range */
@@ -10,43 +10,46 @@
 }
 
 .createDateRangePicker.ant-calendar-picker-input.ant-input:hover {
-  border-color: #2B8572 !important;
+  border-color: #2b8572 !important;
   outline: 0 !important;
   -webkit-box-shadow: 0 0 0 2px rgba(49, 139, 54, 0.342) !important;
   box-shadow: 0 0 0 2px rgba(49, 139, 54, 0.342) !important;
 }
 
 .createDateRangePicker:hover {
-  border-color: #2B8572 !important;
+  border-color: #2b8572 !important;
 }
 
 .createDateRangePicker.ant-picker-focused {
-  border-color: #2B8572 !important;
+  border-color: #2b8572 !important;
   outline: 0 !important;
   -webkit-box-shadow: 0 0 0 2px rgba(49, 139, 54, 0.342) !important;
   box-shadow: 0 0 0 2px rgba(49, 139, 54, 0.342) !important;
 }
 
 .createDateRangePicker .ant-picker-active-bar {
-  background-color: #2B8572 !important;
+  background-color: #2b8572 !important;
 }
 
 .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner {
-  background-color: #2B8572 !important;
+  background-color: #2b8572 !important;
 }
 
 .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
-  background-color: #2B8572 !important;
+  background-color: #2b8572 !important;
 }
 
-.ant-picker-cell-in-view.ant-picker-cell-today
-  .ant-picker-cell-inner::before {
-  border-color: #2B8572 !important;
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border-color: #2b8572 !important;
 }
 
-.ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
+.ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+    .ant-picker-cell-range-start-single
+  )::before,
 .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
-.ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before,
+.ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+    .ant-picker-cell-range-end-single
+  )::before,
 .ant-picker-time-panel-column
   > li.ant-picker-time-panel-cell-selected
   .ant-picker-time-panel-cell-inner {
@@ -54,6 +57,6 @@
 }
 
 .ant-btn-primary {
-background-color: #2B8572 !important;
-border-color: #2B8572 !important;
+  background-color: #2b8572 !important;
+  border-color: #2b8572 !important;
 }

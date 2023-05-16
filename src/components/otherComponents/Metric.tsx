@@ -1,43 +1,53 @@
 import * as yup from "yup";
-import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
-import Button from '../button/Button'
-import Input from '../input/Input'
-import { createMetrics, getMetric, updateMetrics } from "../../server/base/metrix"
-import { toast } from "react-toastify"
-import { useMutation, useQuery } from "react-query"
+import { Select } from "antd";
+import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { Select } from "antd"
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
+import Input from "../input/Input";
+import Button from "../button/Button";
+import {
+  createMetrics,
+  getMetric,
+  updateMetrics,
+} from "../../server/base/metrix";
 interface Props {
-  setStateMetric: Dispatch<SetStateAction<boolean>>
-  participantId: string
+  setStateMetric: Dispatch<SetStateAction<boolean>>;
+  participantId: string;
 }
 let schema = yup.object().shape({});
 
 const SelectCompletedMeeting = [
   { label: "Yes", value: true },
   { label: "No", value: false },
-]
+];
 const SelectJoinedEarly = [
   { label: "Yes", value: true },
   { label: "No", value: false },
-]
+];
 const SelectAttendedMeeting = [
   { label: "Yes", value: true },
   { label: "No", value: false },
-]
+];
 
 const SelectCompletedTask = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
   { label: "Half-done", value: "half-done" },
-]
+];
 const SelectPart = [
   { label: "Active", value: "active" },
   { label: "Inactive", value: "inactive" },
   { label: "Bad-Network", value: "bad-network" },
   { label: "No-Power", value: "no-power" },
   { label: "Permitted", value: "permitted" },
-]
+];
 
 const SelectReview = [
   { label: "Good", value: "good" },
@@ -47,30 +57,33 @@ const SelectReview = [
 ];
 
 const Metric = ({ setStateMetric, participantId }: Props) => {
-  const { id: standupId } = useParams()
-  const { data, isLoading: isLoadin } = useQuery(["getMetric", participantId], () => getMetric(standupId as string, participantId))
+  const queryClient = useQueryClient();
+  const { id: standupId } = useParams();
+  const { data, isLoading: isLoadin } = useQuery(
+    ["getMetric", participantId],
+    () => getMetric(standupId as string, participantId)
+  );
 
+  const [attendedMeeting, setAttendedMeeting] = useState();
+  const [completedMeeting, setCompletedMeeting] = useState<boolean | null>();
+  const [joinedEarly, setJoinedEarly] = useState<boolean | null>();
 
-  console.log(data, 'standupId dat')
-  const [state, setState] = useState<string>('')
+  const [review, setReview] = useState();
+  const [comment, setComment] = useState<string>();
+  const [participation, setParticipation] = useState<string>();
+  const [completedTask, setCompletedTask] = useState();
 
-  const [attendedMeeting, setAttendedMeeting] = useState()
-  const [completedMeeting, setCompletedMeeting] = useState<boolean | null>()
-  const [joinedEarly, setJoinedEarly] = useState<boolean | null>()
-
-  const [review, setReview] = useState()
-  const [comment, setComment] = useState<string>()
-  const [participation, setParticipation] = useState<string>()
-  const [completedTask, setCompletedTask] = useState()
-
-  const { mutate, isLoading } = useMutation((data?.data ? updateMetrics : createMetrics ), {
-    onSuccess: (res) => {
-      toast.success(res?.message);
-    },
-    onError: (e: Error) => {
-      toast?.error(e?.message);
-    },
-  })
+  const { mutate, isLoading } = useMutation(
+    data?.data ? updateMetrics : createMetrics,
+    {
+      onSuccess: (res) => {
+        toast.success(res?.message);
+      },
+      onError: (e: Error) => {
+        toast?.error(e?.message);
+      },
+    }
+  );
 
   useEffect(() => {
     setAttendedMeeting(data?.data ? data?.data?.attendedMeeting : null);
@@ -80,77 +93,62 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
     setReview(data?.data ? data?.data?.review : null);
     setComment(data?.data ? data?.data?.comment : null);
     setJoinedEarly(data?.data ? data?.data?.joinedEarly : null);
-
-  }, [data?.data])
-
+  }, [data?.data]);
 
   const onFinish = (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     let values = {
       standupId,
       staffId: participantId,
-      comment,
-      joinedEarly,  //boolean
-      attendedMeeting, //boolean
-      review, // fair
-      completedMeeting, // boolean
-      participation,  //inacctive
+      ...(comment?.length && { comment }),
+      joinedEarly,
+      attendedMeeting,
+      review,
+      completedMeeting,
+      participation,
       completedTask,
-    }
+    };
 
-    console.log(values, 'values')
+    console.log(values, "values");
 
-    schema
-      .validate(values)
-      .then(() => {
-        mutate({...values, ...(comment.length && {comment}), ...(data?.data && {id:data.data.id})}, {
+    schema.validate(values).then(() => {
+      mutate(
+        {
+          ...values,
+          ...(data?.data && { id: data.data.id }),
+        },
+        {
           onSuccess: (data) => {
-            // console.log(data?.data, 'Metric Updated successfully');
-            toast.success(data?.message)
-            setStateMetric(prev => !prev)
+            toast.success(data?.message);
+            queryClient.invalidateQueries(`metric-${participantId}`);
+            setStateMetric((prev) => !prev);
           },
           onError: (e: unknown) => {
             if (e instanceof Error) {
-              toast.error(e.message)
+              toast.error(e.message);
             }
-          }
-        });
-      })
-  }
-
+          },
+        }
+      );
+    });
+  };
 
   return (
     <div className="my-5 sm:my-0">
       <div className="flex items-center justify-between mb-10">
         <span className="font-bold text-xl sm:text-4xl">Metric</span>
-
-        {/* <svg onClick={() => {}} className='cursor-pointer' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#clip0_10206_90642)">
-          <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#668A99" />
-        </g>
-        <defs>
-          <clipPath id="clip0_10206_90642">
-            <rect width="24" height="24" fill="white" />
-          </clipPath>
-        </defs>
-      </svg> */}
-
-
       </div>
       <form onSubmit={onFinish}>
-        {/* <Input label='Joins Early' value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Task Name" /> */}
-        {/* <Input label='Present in Meeting' value={email} onChange={e => setEmail(e.target.value)} placeholder='Dependant' type="text" /> */}
-        {/* <Input label='Participation' value={position} onChange={e => setPosition(e.target.value)} type="date" placeholder="Position" /> */}
-
         <div>
           <div className="">
-            <label className="text-black flex items-center text-left text-sm font-semibold">CompletedMeeting</label>
+            <label className="text-black flex items-center text-left text-sm font-semibold">
+              CompletedMeeting
+            </label>
           </div>
           <Select
             placeholder="Select CompletedMeeting"
             style={{ width: "100%" }}
-            // mode="multiple"
             size="large"
             allowClear
             // loading={ isLoading || isFetching}
@@ -162,7 +160,9 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
         </div>
         <div>
           <div className="">
-            <label className="text-black flex items-center text-left text-sm font-semibold">AttendedMeeting</label>
+            <label className="text-black flex items-center text-left text-sm font-semibold">
+              AttendedMeeting
+            </label>
           </div>
           <Select
             placeholder="Select attendedMeeting"
@@ -179,7 +179,9 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
         </div>
         <div>
           <div className="">
-            <label className="text-black flex items-center text-left text-sm font-semibold">JoinedEarly</label>
+            <label className="text-black flex items-center text-left text-sm font-semibold">
+              JoinedEarly
+            </label>
           </div>
           <Select
             placeholder="Select joinedEarly"
@@ -197,7 +199,9 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
 
         <div>
           <div className="">
-            <label className="text-black flex items-center text-left text-sm font-semibold">Participation</label>
+            <label className="text-black flex items-center text-left text-sm font-semibold">
+              Participation
+            </label>
           </div>
           <Select
             placeholder="Select Participation"
@@ -216,7 +220,9 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
 
         <div>
           <div className="">
-            <label className="text-black flex items-center text-left text-sm font-semibold">Review</label>
+            <label className="text-black flex items-center text-left text-sm font-semibold">
+              Review
+            </label>
           </div>
           <Select
             placeholder="Select Review"
@@ -233,7 +239,9 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
         </div>
         <div>
           <div className="">
-            <label className="text-black flex items-center text-left text-sm font-semibold">CompletedTask</label>
+            <label className="text-black flex items-center text-left text-sm font-semibold">
+              CompletedTask
+            </label>
           </div>
           <Select
             placeholder="Select CompletedTask"
@@ -265,17 +273,28 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
             className="mb-2 py-3"
           />
         </div> */}
-        <Input label='Comments' value={comment} onChange={e => setComment(e.target.value)} placeholder='Comment' type="text" />
+        <Input
+          label="Comments"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Comment"
+          type="text"
+        />
         {/* <Input label='Review' value={review} onChange={e => setReview(e.target.value)} placeholder='Review' type="text" /> */}
         {/* <Input label='Participation' value={participation} onChange={e => setParticipation(e.target.value)} type="text" placeholder="participation" /> */}
 
         <div className="flex items-center justify-center">
-          <Button loading={isLoading} className="text-center rounded-lg mt-5" type="submit" title={`${data?.data === null ? 'Create Metric' : 'Update Metric'}`} />
+          <Button
+            loading={isLoading}
+            className="text-center rounded-lg mt-5"
+            type="submit"
+            title={`${data?.data === null ? "Create Metric" : "Update Metric"}`}
+          />
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Metric
+export default Metric;
 // https://web.facebook.com/reel/1090510225201264/?s=ifu
