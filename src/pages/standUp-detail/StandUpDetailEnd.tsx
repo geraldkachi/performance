@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../../components";
 import { deleteStandUp, endStandUpUpdate, getStandUp, getStandUpOne } from "../../server/base/standup";
 import { toast } from "react-toastify";
-import { getMetrics } from "../../server/base/metrix";
+import { getMetric, getMetrics } from "../../server/base/metrix";
 import Metric from "../../components/otherComponents/Metric";
 interface columnsProps {
   title: string
@@ -22,6 +22,7 @@ const StandUpDetailEnd = () => {
 
   const navigate = useNavigate()
 
+  const [grabid, setGrabID] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [stateMetric, setStateMetric] = useState<boolean>(false);
@@ -29,12 +30,16 @@ const StandUpDetailEnd = () => {
 
 
   // const { data, isLoading, isFetching } = useQuery(["getStandUp", limit, page], () => getStandUp(10))
-  const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { refetchOnMount: true})
+  const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { refetchOnMount: true })
+  // get a single metric from the
+  const { data: singleMettric, isLoading: isLoadinsingleMettric } = useQuery(["getMetric", participantId], () => getMetric(id as string, participantId), { refetchOnMount: true, refetchOnReconnect: true })
 
-  const { data: oneData, isLoading: isLoadingOne, isFetching: isFetchingOne } = useQuery(["getStandUpOne", limit, page], () => getStandUpOne(id), { refetchOnMount: true})
+
+  const { data: oneData, isLoading: isLoadingOne, isFetching: isFetchingOne } = useQuery(["getStandUpOne", limit, page], () => getStandUpOne(id), { refetchOnMount: true })
   useEffect(() => {
-   (oneData?.data && data)
-},[oneData?.data, id])
+    (oneData?.data && data)
+  }, [oneData?.data, id])
+
   const columns: columnsProps[] | any = [
     {
       title: 'Staff Name',
@@ -111,9 +116,9 @@ const StandUpDetailEnd = () => {
       {isLoadingOne ? <Spin />
         :
         <>
-      <div className="mt-5 flex items-center">
-        <p className=" text-3xl bg-[##141C1F]">{oneData?.data?.endTime === null ? 'Meeting ongoing' : 'Meeting Ended'}</p>
-      </div>
+          <div className="mt-5 flex items-center">
+            <p className=" text-3xl bg-[##141C1F]">{oneData?.data?.endTime === null ? 'Meeting ongoing' : 'Meeting Ended'}</p>
+          </div>
           <p className="block mt-3 text-3xl bg-[##141C1F] capitalize">Title: {oneData?.data?.title}</p>
 
           <div className="mt-5 flex items-center">
@@ -123,7 +128,7 @@ const StandUpDetailEnd = () => {
               onClick={() => mutate({
                 id,
                 shouldEnd: true
-            })}
+              })}
             />
           </div>
         </>
@@ -131,6 +136,48 @@ const StandUpDetailEnd = () => {
 
 
       <div className="mt-10 mb-20 overflow-x-auto">
+
+        <div className="grid md:grid-cols-2 gap-x-4">
+
+          {oneData?.data?.participants?.map((i: { name: string, id: string }) =>
+
+            <blockquote key={i.id} onClick={() => {
+              if (!oneData?.data?.endTime) {
+                setParticipantId(i.id)
+                queryClient.invalidateQueries('getMetric')
+                setStateMetric(true)
+              }
+            }}
+              className="rounded-lg bg-[#dce8fd] p-8 mt-10 cursor-pointer">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center ">
+
+                  <img
+                    alt="Man"
+                    src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+                    className="h-16 w-16 rounded-full object-cover mr-3"
+                  />
+                  <div className=" text-green-500">
+                    {i?.name}
+                  </div>
+                </div>
+                <div className="">
+                  {/* <p className="mt-1 text-lg font-medium text-gray-700">Paul Starr</p> */}
+                  <div className="flex items-center justify-center ml-3">
+                    <Button loading={isLoadinsingleMettric} className="text-center rounded-lg" type="button" title={`${singleMettric?.data === null ? 'Create Metric' : 'Update Metric'}`} />
+                  </div>
+                </div>
+              </div>
+
+              {/* <p className="line-clamp-2 sm:line-clamp-none mt-4 text-gray-500">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
+              voluptatem alias ut provident sapiente repellendus.
+            </p> */}
+
+            </blockquote>
+          )}
+        </div>
+
         <Table
           size="small"
           columns={columns}
@@ -155,6 +202,7 @@ const StandUpDetailEnd = () => {
             onClick: () => {
               if (!oneData?.data?.endTime) {
                 setParticipantId(val?.id)
+                setGrabID(val?.id)
                 queryClient.invalidateQueries('getMetric')
                 setStateMetric(true)
               }

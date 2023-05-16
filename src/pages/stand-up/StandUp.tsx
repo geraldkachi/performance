@@ -114,6 +114,8 @@ const StandUp = () => {
             onClick: () => {
               navigate(`/stand-up/${val?.id}`)
               queryClient.invalidateQueries('getStandUpOne')
+              queryClient.invalidateQueries('getMetric')
+              queryClient.invalidateQueries('getMetrics')
               }
           })
           }
