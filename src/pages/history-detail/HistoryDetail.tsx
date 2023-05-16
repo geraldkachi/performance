@@ -1,11 +1,12 @@
-import { Table, Dropdown, Tag, DatePicker, Modal } from "antd";
-import { format } from "date-fns";
 import { useState } from "react";
-import { Button, NewStaff, NewTask } from "../../components";
-import { useParams } from "react-router-dom";
-import { getMetrics } from "../../server/base/metrix";
+import { format } from "date-fns";
+import { Table, Modal } from "antd";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import { AlignType } from "rc-table/lib/interface";
 
+import { Button, NewTask } from "../../components";
+import { getMetrics } from "../../server/base/metrix";
 
 const columns = [
   {
@@ -15,11 +16,11 @@ const columns = [
       </>
     ),
     // dataIndex: 'staffName',
-    render: (val: {staffName: string}) => (
+    render: (val: { staffName: string }) => (
       <span className="whitespace-nowrap">{val?.staffName}</span>
     ),
-    width: '10%',
-    align: 'center',
+    width: "10%",
+    align: "center" as AlignType,
   },
   {
     title: (
@@ -28,11 +29,11 @@ const columns = [
       </>
     ),
     // dataIndex: 'joinedEarly',
-    render: (val:{ joinedEarly: string}) => (
+    render: (val: { joinedEarly: string }) => (
       <span>{val?.joinedEarly === "true" ? "True" : "False"}</span>
     ),
-    width: '10%',
-    align: 'center',
+    width: "10%",
+    align: "center" as AlignType,
   },
   {
     title: (
@@ -41,60 +42,58 @@ const columns = [
       </>
     ),
     // dataIndex: 'completedMeeting',
-    render: (val: {completedMeeting: string}) => (
+    render: (val: { completedMeeting: string }) => (
       <span>{val?.completedMeeting === "true" ? "True" : "False"}</span>
     ),
-    width: '20%',
-    align: 'center',
+    width: "20%",
+    align: "center" as AlignType,
   },
   {
-    title: 'Participation',
+    title: "Participation",
     // dataIndex: 'participation',
-    render: (val: {participation: string}) => (
+    render: (val: { participation: string }) => (
       <span>{val?.participation}</span>
     ),
-    width: '20%',
-    align: 'center',
+    width: "20%",
+    align: "center" as AlignType,
   },
   {
-    title: 'Attendance',
+    title: "Attendance",
     // dataIndex: 'attendedMeeting',
-    render: (val: {attendedMeeting: string}) => (
-      <span>{val?.attendedMeeting === 'true' ? "True" : "False"}</span>
+    render: (val: { attendedMeeting: string }) => (
+      <span>{val?.attendedMeeting === "true" ? "True" : "False"}</span>
     ),
-    width: '20%',
-    align: 'center',
+    width: "20%",
+    align: "center" as AlignType,
   },
   {
-    title: 'Task',
+    title: "Task",
     // dataIndex: 'role',
-    render: () => (
-      <span className="whitespace-nowrap">{'--/--/----'}</span>
-    ),
-    width: '20%',
-    align: 'center',
+    render: () => <span className="whitespace-nowrap">{"--/--/----"}</span>,
+    width: "20%",
+    align: "center" as AlignType,
   },
   {
-    title: 'Percentage',
-    dataIndex: 'review',
-    width: '20%',
-    align: 'center',
+    title: "Percentage",
+    dataIndex: "review",
+    width: "20%",
+    align: "center" as AlignType,
   },
 ];
 
-
-const { RangePicker } = DatePicker;
-
 const HistoryDetail = () => {
-  const { id } = useParams()
+  const { id } = useParams();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
-  const [dates, setDates] = useState<string[]>([]);
-  const [stateNewTask, setStateNewTask] = useState<boolean>(false)
+  const [stateNewTask, setStateNewTask] = useState<boolean>(false);
 
-  const { data, isLoading, isFetching } = useQuery(["getMetrics", page, limit], () => getMetrics(page, limit, id), { keepPreviousData: true })
+  const { data, isLoading, isFetching } = useQuery(
+    ["getMetrics", page, limit],
+    () => getMetrics(page, limit, id),
+    { keepPreviousData: true }
+  );
 
-  console.log(data?.data, 'metrics')
+  console.log(data?.data, "metrics");
 
   const onPageChange = (page: number) => {
     setPage(page);
@@ -107,40 +106,27 @@ const HistoryDetail = () => {
   return (
     <div>
       <div className="mt-5 flex items-center justify-between">
-        <div className="text-right">{format(new Date(), "dd MMMM yyyy, hh:mm a")}</div>
-      </div>email
-
+        <div className="text-right">
+          {format(new Date(), "dd MMMM yyyy, hh:mm a")}
+        </div>
+      </div>
+      email
       <div className="mt-5 flex items-center justify-between">
         <p className=" text-3xl bg-[##141C1F]">History</p>
 
-        <Button className="text-center rounded-lg mt-5" title="Assign Task" onClick={() => setStateNewTask(true)} />
+        <Button
+          className="text-center rounded-lg mt-5"
+          title="Assign Task"
+          onClick={() => setStateNewTask(true)}
+        />
       </div>
-
-      <div className="mt-5 flex items-center justify-between text-xl">Data for 01/01/2021 - 01/01/2022 displayed </div>
-
-
-
-
+      <div className="mt-5 flex items-center justify-between text-xl">
+        Data for 01/01/2021 - 01/01/2022 displayed{" "}
+      </div>
       <div className="mt-10 mb-20 overflow-x-auto">
         <Table
-          // dataSource={data?.data?.customers}
-          // columns={columns}
-          // // loading={}
-          // rowClassName={(_record, index) => (index % 2 !== 0 ? "stripe" : "")}
-          // pagination={{
-          //   position: ["bottomRight"],
-          //   current: page,
-          //   total: data?.data?.count,
-          //   pageSize: limit,
-          //   showSizeChanger: true,
-          //   onShowSizeChange: onLimitChange,
-          //   onChange: onPageChange,
-          // }}
-          // rowKey={(record) => record?.id}
-
           size="small"
           rowKey="id"
-          pagination={false}
           columns={columns}
           dataSource={data?.data}
           loading={isLoading || isFetching}
@@ -153,18 +139,22 @@ const HistoryDetail = () => {
             onShowSizeChange: onLimitChange,
             onChange: onPageChange,
           }}
-          style={{ marginTop: '20px' }}
+          style={{ marginTop: "20px" }}
         />
       </div>
-
-
-      <Modal open={stateNewTask} onCancel={() => setStateNewTask(false)} footer={null} maskClosable={false} closable={true} afterClose={() => setStateNewTask(false)}>
-
-      {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
+      <Modal
+        open={stateNewTask}
+        onCancel={() => setStateNewTask(false)}
+        footer={null}
+        maskClosable={false}
+        closable={true}
+        afterClose={() => setStateNewTask(false)}
+      >
+        {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
         <NewTask {...{ setStateNewTask }} />
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default HistoryDetail
+export default HistoryDetail;

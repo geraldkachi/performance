@@ -58,13 +58,16 @@ const Login = () => {
     e.preventDefault();
 
     const values = {
+      //@ts-ignore
       email: e.target["email"].value,
+      //@ts-ignore
       password: e.target["password"].value,
     };
 
     schema
       .validate(values)
       .then((_val) => {
+        //@ts-ignore
         mutation.mutate(values, {
           onError: (e: unknown) => {
             if (e instanceof Error) {
@@ -81,6 +84,7 @@ const Login = () => {
   const onOtp = (e: FormEvent) => {
     e.preventDefault();
     const value = {
+      //@ts-ignore
       otp: e.target["otp"].value,
     };
 

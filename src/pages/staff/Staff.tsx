@@ -1,8 +1,8 @@
-import { Table, Modal, Tag } from "antd";
 import { useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { Table, Modal, Tag } from "antd";
+import { AlignType } from "rc-table/lib/interface";
 
 import { getStaffs } from "../../server/base";
 import { Button, NewStaff, NewTask } from "../../components";
@@ -44,7 +44,7 @@ const Staff = () => {
       title: "Role",
       dataIndex: "role",
       width: "20%",
-      align: "center",
+      align: "center" as AlignType,
       render: (val: string) => (
         <span className="capitalize">
           {val === "admin" ? "admin" : "super admin"}
@@ -55,7 +55,7 @@ const Staff = () => {
       title: "Status",
       width: "12%",
       dataIndex: "isActive",
-      align: "center",
+      align: "center" as AlignType,
       render: (val: boolean) => (
         <Tag color={val ? "green" : "red"}>{val ? "Active" : "Inactive"}</Tag>
       ),

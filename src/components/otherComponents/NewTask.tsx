@@ -1,16 +1,16 @@
 import * as yup from "yup";
-import { toast } from "react-toastify"
-import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react"
+import { toast } from "react-toastify";
+import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react";
 
-import Input from '../input/Input'
-import Button from '../button/Button'
+import Input from "../input/Input";
+import Button from "../button/Button";
 import { useMutation, useQuery } from "react-query";
 import { createTask } from "../../server/base/task";
 import { getStaffs } from "../../server/base";
 import { Select } from "antd";
 
 interface Props {
-  setStateNewTask: Dispatch<SetStateAction<boolean>>
+  setStateNewTask: Dispatch<SetStateAction<boolean>>;
 }
 let schema = yup.object().shape({});
 
@@ -23,47 +23,51 @@ const rolesOption = [
 const NewTask = ({ setStateNewTask }: Props) => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
-  const formInput = useRef<HTMLInputElement>(null)
-  const [state, setState] = useState<string>('')
+  const formInput = useRef<HTMLInputElement>(null);
+  const [state, setState] = useState<string>("");
 
-  const { data, isLoading, isFetching } = useQuery(["getStaffs", limit, page], () => getStaffs(limit, page), { keepPreviousData: true })
-  console.log(data?.data?.staff, 'getStaffs')
+  const { data, isLoading, isFetching } = useQuery(
+    ["getStaffs", limit, page],
+    () => getStaffs(limit, page),
+    { keepPreviousData: true }
+  );
 
-  const mutation = useMutation(createTask)
+  const mutation = useMutation(createTask);
 
-  const staffId = localStorage.getItem('staffId')
+  const staffId = localStorage.getItem("staffId");
 
   const onFinish = (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const values = {
-      name:e.target["name"].value,
+      //@ts-ignore
+      name: e.target["name"].value,
       staffId,
+      //@ts-ignore
       endDate: e.target["enddate"].value,
+      //@ts-ignore
       startDate: e.target["startdate"].value,
-      assignedBy: "2a7e33bd-2e83-4dd4-81b3-9d337bece591",
+      assignedBy: staffId,
+      //@ts-ignore
       description: e.target["description"].value,
-      dependants: ['Kingsley'],
+      dependants: ["Kingsley"],
       status: state,
-    }
+    };
 
-    schema
-      .validate(values)
-      .then((_val) => {
-        mutation.mutate(values, {
-          onSuccess: (data) => {
-            setStateNewTask(prev => !prev)
-            toast.success('Task Created Successfully')
-          },
-          onError: (e: unknown) => {
-            if (e instanceof Error) {
-              toast.error(e.message)
-            }
+    schema.validate(values).then((_val) => {
+      mutation.mutate(values, {
+        onSuccess: (data) => {
+          setStateNewTask((prev) => !prev);
+          toast.success("Task Created Successfully");
+        },
+        onError: (e: unknown) => {
+          if (e instanceof Error) {
+            toast.error(e.message);
           }
-        });
-      })
-
-  }
+        },
+      });
+    });
+  };
 
   return (
     <div className="my-5 sm:my-0">
@@ -80,36 +84,71 @@ const NewTask = ({ setStateNewTask }: Props) => {
             </clipPath>
           </defs>
         </svg> */}
-
-
       </div>
       <form onSubmit={onFinish}>
-        <Input ref={formInput} label='Task Name' name='name' type="text" placeholder="Task Name" />
-        <Input ref={formInput} label='Dependant' name="dependant" placeholder='Dependant' type="text" />
-        <Input ref={formInput} label='Start Date' name="startdate" type="date" placeholder="Position" />
-        <Input ref={formInput} label='End Date' name="enddate" type="date" placeholder="Position" />
-        <Input ref={formInput} label='Description' name='description' placeholder='Description' type="text" />
+        <Input
+          ref={formInput}
+          label="Task Name"
+          name="name"
+          type="text"
+          placeholder="Task Name"
+        />
+        <Input
+          ref={formInput}
+          label="Dependant"
+          name="dependant"
+          placeholder="Dependant"
+          type="text"
+        />
+        <Input
+          ref={formInput}
+          label="Start Date"
+          name="startdate"
+          type="date"
+          placeholder="Position"
+        />
+        <Input
+          ref={formInput}
+          label="End Date"
+          name="enddate"
+          type="date"
+          placeholder="Position"
+        />
+        <Input
+          ref={formInput}
+          label="Description"
+          name="description"
+          placeholder="Description"
+          type="text"
+        />
         <div className="mt-5">
-            <div className="">
-              <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">Status</label>
-            </div>
+          <div className="">
+            <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">
+              Status
+            </label>
+          </div>
           <Select
             placeholder="Select Status"
             style={{ width: "100%" }}
             size="large"
             onSelect={(e) => setState(e)}
             options={rolesOption}
-            loading={ isLoading || isFetching }
+            loading={isLoading || isFetching}
             className="mb-3"
           />
-          </div>
+        </div>
 
         <div className="flex items-center justify-center">
-          <Button loading={mutation.isLoading} className="text-center rounded-lg mt-5" type="submit" title="Create Task" />
+          <Button
+            loading={mutation.isLoading}
+            className="text-center rounded-lg mt-5"
+            type="submit"
+            title="Create Task"
+          />
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default NewTask
+export default NewTask;

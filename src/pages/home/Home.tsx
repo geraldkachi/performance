@@ -201,7 +201,7 @@ const Home = () => {
       {
         name: "Performance Metrics Points/Scores",
         // data: [20, 30, 40, 20, 100, 60, 70, 54],
-        data: overall?.data.map((i: { staffName: string }) => i.percent),
+        data: overall?.data.map((i: { percent: string }) => i.percent),
       },
     ],
   };
