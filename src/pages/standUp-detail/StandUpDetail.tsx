@@ -28,10 +28,6 @@ const StandUpDetail = () => {
     () => getStaffs(limit, page),
     { keepPreviousData: true }
   );
-  // console.log(data?.data?.staff, 'getStaffs')
-  // console.log(state, 'getStaffs state')
-
-  // console.log(state, 'setState(e)')
 
   const onFinish = (e: FormEvent) => {
     e.preventDefault();
@@ -107,14 +103,9 @@ const StandUpDetail = () => {
               allowClear
               loading={isLoading || isFetching}
               value={state}
-              // onSelect={(e) => setState(e)}
               onChange={(e) => {
-                console.log(e, "eeeeee");
                 setState(e);
               }}
-              // onSelect={(e: string[]) => {
-              //   setState(e)
-              // }}
               options={
                 data &&
                 data?.data?.staff?.map(
@@ -133,23 +124,6 @@ const StandUpDetail = () => {
               }
               className="mb-3 py-3"
             />
-            {/* <Select
-      mode="multiple"
-      allowClear
-      style={{ width: '100%' }}
-      placeholder="Please select"
-      defaultValue={['a10', 'c12']}
-      onChange={handleChange}
-      options={options}
-    /> */}
-            {/* <Select
-              style={{ width: "100%" }}
-              size="large"
-              value={state} onChange={value => setState(value)}>
-              {data?.data?.staff?.map((option: any) => (
-                <Select.Option key={option?.id} value={option?.id}>{`${option?.firstName} ${option?.lastName}`}</Select.Option>
-              ))}
-            </Select> */}
           </div>
 
           <div className="flex items-center">

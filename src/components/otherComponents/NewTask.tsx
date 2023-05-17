@@ -1,13 +1,13 @@
 import * as yup from "yup";
+import { Select } from "antd";
 import { toast } from "react-toastify";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react";
 
 import Input from "../input/Input";
 import Button from "../button/Button";
-import { useMutation, useQuery } from "react-query";
-import { createTask } from "../../server/base/task";
 import { getStaffs } from "../../server/base";
-import { Select } from "antd";
+import { createTask } from "../../server/base/task";
 
 interface Props {
   setStateNewTask: Dispatch<SetStateAction<boolean>>;
@@ -21,20 +21,19 @@ const rolesOption = [
 ];
 
 const NewTask = ({ setStateNewTask }: Props) => {
-  const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const formInput = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+  const [staff, setStaff] = useState(null);
+  const [page, _setPage] = useState<number>(1);
   const [state, setState] = useState<string>("");
+  const [limit, _setLimit] = useState<number>(100);
+  const formInput = useRef<HTMLInputElement>(null);
+  const [dependants, setDependants] = useState<string[]>([]);
 
-  const { data, isLoading, isFetching } = useQuery(
-    ["getStaffs", limit, page],
-    () => getStaffs(limit, page),
-    { keepPreviousData: true }
+  const { data, isLoading } = useQuery(["getStaffs", limit, page], () =>
+    getStaffs(limit, page)
   );
 
   const mutation = useMutation(createTask);
-
-  const staffId = localStorage.getItem("staffId");
 
   const onFinish = (e: FormEvent) => {
     e.preventDefault();
@@ -42,21 +41,22 @@ const NewTask = ({ setStateNewTask }: Props) => {
     const values = {
       //@ts-ignore
       name: e.target["name"].value,
-      staffId,
+      staffId: staff,
       //@ts-ignore
       endDate: e.target["enddate"].value,
       //@ts-ignore
       startDate: e.target["startdate"].value,
-      assignedBy: staffId,
+      assignedBy: localStorage.getItem("staffId"),
       //@ts-ignore
       description: e.target["description"].value,
-      dependants: ["Kingsley"],
+      dependants,
       status: state,
     };
 
     schema.validate(values).then((_val) => {
       mutation.mutate(values, {
-        onSuccess: (data) => {
+        onSuccess: (_data) => {
+          queryClient.invalidateQueries("taskApi");
           setStateNewTask((prev) => !prev);
           toast.success("Task Created Successfully");
         },
@@ -73,17 +73,6 @@ const NewTask = ({ setStateNewTask }: Props) => {
     <div className="my-5 sm:my-0">
       <div className="flex items-center justify-between mb-10">
         <span className="font-bold text-xl sm:text-4xl">New Task</span>
-
-        {/* <svg onClick={() => setStateNewTask(prev => !prev)} className='cursor-pointer' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_10206_90642)">
-            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#668A99" />
-          </g>
-          <defs>
-            <clipPath id="clip0_10206_90642">
-              <rect width="24" height="24" fill="white" />
-            </clipPath>
-          </defs>
-        </svg> */}
       </div>
       <form onSubmit={onFinish}>
         <Input
@@ -93,13 +82,66 @@ const NewTask = ({ setStateNewTask }: Props) => {
           type="text"
           placeholder="Task Name"
         />
-        <Input
-          ref={formInput}
-          label="Dependant"
-          name="dependant"
-          placeholder="Dependant"
-          type="text"
-        />
+        <div className="mt-5">
+          <div className="">
+            <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">
+              Staff
+            </label>
+          </div>
+          <Select
+            placeholder="Select Staff"
+            style={{ width: "100%" }}
+            size="large"
+            loading={isLoading}
+            value={staff}
+            onSelect={(e) => {
+              setStaff(e);
+            }}
+            options={
+              data &&
+              data?.data?.staff?.map(
+                (val: { firstName: string; lastName: string; id: string }) => {
+                  const temp = {
+                    value: val?.id,
+                    label: `${val?.firstName} ${val?.lastName}`,
+                  };
+                  return temp;
+                }
+              )
+            }
+          />
+        </div>
+        <div className="mt-5">
+          <div className="">
+            <label className="my-1 text-black flex items-center text-left text-sm font-semibold mt-1">
+              Dependants
+            </label>
+          </div>
+          <Select
+            placeholder="Select Dependants"
+            style={{ width: "100%" }}
+            mode="multiple"
+            size="large"
+            allowClear
+            loading={isLoading}
+            value={dependants}
+            onChange={(e) => {
+              setDependants(e);
+            }}
+            options={
+              data &&
+              data?.data?.staff?.map(
+                (val: { firstName: string; lastName: string; id: string }) => {
+                  const temp = {
+                    value: val?.id,
+                    label: `${val?.firstName} ${val?.lastName}`,
+                  };
+                  return temp;
+                }
+              )
+            }
+          />
+        </div>
         <Input
           ref={formInput}
           label="Start Date"
@@ -133,7 +175,6 @@ const NewTask = ({ setStateNewTask }: Props) => {
             size="large"
             onSelect={(e) => setState(e)}
             options={rolesOption}
-            loading={isLoading || isFetching}
             className="mb-3"
           />
         </div>

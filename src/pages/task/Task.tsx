@@ -23,9 +23,6 @@ const Task = () => {
   } = useQuery(["getTaskById", id], () => getTaskById(id), {
     keepPreviousData: true,
   });
-  console.log(taskId, "getTaskById");
-  console.log(id, "id params");
-  const navigate = useNavigate();
 
   const columns = [
     {
@@ -99,7 +96,6 @@ const Task = () => {
     ["taskApi", page, limit],
     () => getTasks(page, limit)
   );
-  console.log(data, "data for task");
 
   const onPageChange = (page: number) => {
     setPage(page);
