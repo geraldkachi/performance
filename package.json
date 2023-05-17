@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -p . && vite build",
     "start": "node -r dotenv/config server",
     "preview": "vite preview",
     "pm2": "pm2 start npm --name \"ARVOKPI_USER\" -- start"
