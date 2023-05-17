@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { format } from "date-fns";
 import { Table, Modal } from "antd";
+import { toast } from "react-toastify";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { AlignType } from "rc-table/lib/interface";
 import { useMutation, useQuery } from "react-query";
 
-import { getTaskById, getTasks } from "../../server/base/task";
 import { Button, NewStaff, NewTask } from "../../components";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { getTaskById, getTasks } from "../../server/base/task";
 
 const Task = () => {
   const { id } = useParams();
@@ -15,14 +15,6 @@ const Task = () => {
   const [limit, setLimit] = useState<number>(10);
   const [stateNewTask, setStateNewTask] = useState<boolean>(false);
   const [stateNewStaff, setStateNewStaff] = useState<boolean>(false);
-
-  const {
-    data: taskId,
-    isLoading: loadingTaskId,
-    isFetching: isFetchingTaskId,
-  } = useQuery(["getTaskById", id], () => getTaskById(id), {
-    keepPreviousData: true,
-  });
 
   const columns = [
     {
