@@ -1,3 +1,4 @@
+import { get } from "js-cookie";
 import { instance, next } from "./base";
 
 export const getMetrics = async (
@@ -59,6 +60,16 @@ export const updateMetrics = async (payload?: any) => {
 export const createMetrics = async (payload?: any) => {
   const { data } = await instance()
     .post(`metric/single`, payload)
+    .catch((e) => {
+      return next(e);
+    });
+
+  return data;
+};
+
+export const getStaffMetric = async (id: string) => {
+  const { data } = await instance()
+    .get(`/metric/stats/${id}`)
     .catch((e) => {
       return next(e);
     });

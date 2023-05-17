@@ -2,12 +2,14 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "react-query";
 import { Table, Modal, Tag } from "antd";
+import { useNavigate } from "react-router";
 import { AlignType } from "rc-table/lib/interface";
 
 import { getStaffs } from "../../server/base";
 import { Button, NewStaff, NewTask } from "../../components";
 
 const Staff = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
@@ -106,11 +108,15 @@ const Staff = () => {
             onShowSizeChange: onLimitChange,
             onChange: onPageChange,
           }}
+          rowClassName={"cursor-pointer"}
+          onRow={(val) => ({
+            onClick: () => {
+              navigate(`/staff/${val?.id}`);
+            },
+          })}
           style={{ marginTop: "20px" }}
         />
       </div>
-
-      {/* <div onClick={() => navigate(`/staff/${1}`)}>Staff Detail</div> */}
 
       <Modal
         open={stateNewTask}
@@ -118,7 +124,6 @@ const Staff = () => {
         footer={null}
         maskClosable={false}
       >
-        {/* <Modal show={stateNewTask} closeModal={setStateNewTask}> */}
         <NewTask {...{ setStateNewTask }} />
       </Modal>
       <Modal
@@ -127,7 +132,6 @@ const Staff = () => {
         footer={null}
         maskClosable={false}
       >
-        {/* <Modal show={stateNewStaff} closeModal={setStateNewStaff}> */}
         <NewStaff {...{ setStateNewStaff }} />
       </Modal>
     </div>

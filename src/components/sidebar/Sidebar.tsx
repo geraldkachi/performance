@@ -7,7 +7,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 // import ReportIcon from "../../assets/svg/ReportIcon";
 // import MenuIcon from "../../assets/svg/MenuIcon";
 
-
 // import { isAuthorised } from "../../utils";
 import "./sidebar.css";
 import LogoutIcon from "../../assets/svg/LogoutIcon";
@@ -46,7 +45,9 @@ const Sidebar = () => {
       >
         <div className={`pt-6 ${"" && " mx-auto"}`}>
           <div className="flex items-center justify-between pb-10 gap-4">
-            <div className="text-xl whitespace-nowrap text-[#2B8572] font-bold">Perfomance Metric</div>
+            <div className="text-xl whitespace-nowrap text-[#2B8572] font-bold">
+              Perfomance Metric
+            </div>
             <MenuIcon
               onClick={() => setOpen(!open)}
               className={`cursor-pointer duration-500 ${
@@ -71,7 +72,7 @@ const Sidebar = () => {
                 key={index}
                 className={`${activeItem && "bg-[#2B8572] rounded-[4px]"} ${
                   activeItem ? "text-white" : "text-[#716C81]"
-                } hover:text-[#ebe5e5] flex items-center rounded-md p-2 cursor-pointer my-4 text-base space-x-3`}
+                } hover:text-[#2B8572] flex items-center rounded-md p-2 cursor-pointer my-4 text-base space-x-3`}
               >
                 <div key={index}> {iconArr[index]}</div>
 

@@ -1,8 +1,7 @@
 import { format } from "date-fns";
-import { Table, Modal } from "antd";
+import { Table, Modal, Tag } from "antd";
+import { useState } from "react";
 import { toast } from "react-toastify";
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import { AlignType } from "rc-table/lib/interface";
 import { useMutation, useQuery } from "react-query";
 
@@ -10,7 +9,6 @@ import { Button, NewStaff, NewTask } from "../../components";
 import { getTaskById, getTasks } from "../../server/base/task";
 
 const Task = () => {
-  const { id } = useParams();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [stateNewTask, setStateNewTask] = useState<boolean>(false);
@@ -19,34 +17,17 @@ const Task = () => {
   const columns = [
     {
       title: "Task",
-      // dataIndex: 'name',
+      dataIndex: "name",
       width: "10%",
       align: "center" as AlignType,
-      render: (val: any) => (
+      render: (val: string) => (
         <div className=" flex items-center">
-          <span className="bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2">
-            {/* {`${val?.name
-            .split(' ')[0]
-            .charAt(0)}${val?.name
-              .split(' ')[1]
-              .charAt(0)}`} */}
-          </span>
-          <span className="capitalize whitespace-nowrap">{`${val?.dataValues?.name}`}</span>
+          <span className="capitalize whitespace-nowrap">{`${val}`}</span>
         </div>
       ),
     },
-    // {
-    //   title: 'Staff Id',
-    //   // dataIndex: 'staffId',
-    //   width: '10%',
-    //   align: 'center',
-    //   render: (val: any) => (
-    //     <span className="capitalize whitespace-nowrap">{`${val?.staffId}`}</span>
-    //   )
-    // },
     {
       title: "AssignedBy Id",
-      // dataIndex: 'staffId',
       width: "10%",
       align: "center" as AlignType,
       render: (val: any) => (
@@ -54,18 +35,37 @@ const Task = () => {
       ),
     },
     {
-      title: "Task ID",
-      // dataIndex: 'id',
+      title: "Start Date",
       width: "5%",
-      // align: 'start',
       render: (val: any) => (
-        <span
-          className="capitalize whitespace-nowrap text-start cursor-pointer"
-          onClick={() =>
-            // navigate(`/task/${val?.id}`)
-            null
+        <span className="capitalize whitespace-nowrap text-start cursor-pointer">{`${format(
+          new Date(val?.startDate),
+          "MM/dd/yyyy - h:mma"
+        )}`}</span>
+      ),
+    },
+    {
+      title: "End Date",
+      width: "5%",
+      render: (val: any) => (
+        <span className="capitalize whitespace-nowrap text-start cursor-pointer">{`${format(
+          new Date(val.endDate),
+          "MM/dd/yyyy - h:mma"
+        )}`}</span>
+      ),
+    },
+    {
+      title: "Status",
+      width: "5%",
+      dataIndex: "status",
+      render: (val: string) => (
+        <Tag
+          color={
+            val === "not-started" ? "red" : val === "ongoing" ? "blue" : "green"
           }
-        >{`${val?.dataValues?.id}`}</span>
+        >
+          {val}
+        </Tag>
       ),
     },
   ];

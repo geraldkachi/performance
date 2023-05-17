@@ -1,127 +1,131 @@
-import { format } from "date-fns";
 import { useState } from "react";
-import { Table, Modal } from "antd";
-import { Pie } from "@ant-design/plots";
+import { format } from "date-fns";
+import { useQueries } from "react-query";
+import { useParams } from "react-router";
+import { Table, Modal, Spin, Tag } from "antd";
 import { AlignType } from "rc-table/lib/interface";
+import Arrow from "../../assets/svg/Arrow";
+import { getStaff } from "../../server/base";
+import DonutChart from "../../components/Pie";
+import { getTasks } from "../../server/base/task";
 import { Button, NewTask } from "../../components";
-
-type DataType =
-  | "new"
-  | "evaluating"
-  | "ongoing"
-  | "finished"
-  | "archived"
-  | "Task Rate";
-
-interface PieChartData {
-  type: DataType;
-  value: number;
-}
-
-const pieChartData: PieChartData[] = [
-  // {
-  //   type: "new",
-  //   value: 40
-  // },
-  // {
-  //   type: "evaluating",
-  //   value: 25
-  // },
-  {
-    type: "ongoing",
-    value: 22,
-  },
-  {
-    type: "Task Rate",
-    value: 22,
-  },
-  // {
-  //   type: "archived",
-  //   value: 10
-  // }
-];
-
-const config = {
-  width: 100,
-  height: 300,
-  appendPadding: 0,
-  data: pieChartData,
-  angleField: "value",
-  colorField: "type",
-  radius: 1,
-  innerRadius: 0.5,
-  color: ["#ffffff", "#52C93F"],
-  border: 1,
-  label: {
-    type: "inner",
-    offset: "-50%",
-    content: "{value}",
-    style: {
-      textAlign: "center",
-      fontSize: 10,
-    },
-  },
-  interactions: [{ type: "element-selected" }, { type: "element-active" }],
-  statistic: {
-    title: false as const,
-    content: {
-      style: {
-        whiteSpace: "pre-wrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      },
-      formatter: function formatter() {
-        return `total\n134`;
-      },
-    },
-  },
-};
+import { getStaffMetric } from "../../server/base/metrix";
 
 const columns = [
   {
-    title: "Staff Name",
+    title: "Task",
     dataIndex: "name",
     width: "10%",
     align: "center" as AlignType,
+    render: (val: string) => (
+      <div className=" flex items-center">
+        <span className="capitalize whitespace-nowrap">{`${val}`}</span>
+      </div>
+    ),
   },
   {
-    title: "Email Address",
-    dataIndex: "email",
+    title: "AssignedBy Id",
     width: "10%",
     align: "center" as AlignType,
+    render: (val: any) => (
+      <span className="capitalize whitespace-nowrap">{`${val?.assignedBy}`}</span>
+    ),
   },
   {
-    title: "Role",
-    dataIndex: "role",
-    width: "20%",
-    align: "center" as AlignType,
-  },
-  {
-    title: "Tasks",
-    dataIndex: "task",
+    title: "Start Date",
     width: "5%",
-    align: "center" as AlignType,
+    render: (val: any) => (
+      <span className="capitalize whitespace-nowrap text-start cursor-pointer">{`${format(
+        new Date(val?.startDate),
+        "MM/dd/yyyy - h:mma"
+      )}`}</span>
+    ),
+  },
+  {
+    title: "End Date",
+    width: "5%",
+    render: (val: any) => (
+      <span className="capitalize whitespace-nowrap text-start cursor-pointer">{`${format(
+        new Date(val.endDate),
+        "MM/dd/yyyy - h:mma"
+      )}`}</span>
+    ),
   },
   {
     title: "Status",
+    width: "5%",
     dataIndex: "status",
-    width: "12%",
-    align: "center" as AlignType,
+    render: (val: string) => (
+      <Tag
+        color={
+          val === "not-started" ? "red" : val === "ongoing" ? "blue" : "green"
+        }
+      >
+        {val}
+      </Tag>
+    ),
   },
 ];
 
+const swapper = (val: string) => {
+  const words = val?.split(/(?=[A-Z])/);
+  return words?.join(" ");
+};
+
 const StaffDetail = () => {
-  // const {id} = useParams()
+  const { id } = useParams();
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
   const [stateNewTask, setStateNewTask] = useState<boolean>(false);
-  // const { data, isLoading, isFetching } = useQuery(["getTaskById", id], () => getTaskById(id), { keepPreviousData: true })
-  // console.log(data, 'getTaskById')
-  // console.log(id, 'id params')
+
+  const [staff, metric, task] = useQueries([
+    {
+      queryKey: `staff-${id}`,
+      queryFn: () => getStaff(id as string),
+      enabled: !!id,
+    },
+    {
+      queryKey: `staff-metric-${id}`,
+      queryFn: () => getStaffMetric(id as string),
+      enabled: !!id,
+    },
+    {
+      queryKey: ["taskApi", page, limit, id],
+      queryFn: () => getTasks(page, limit, id),
+      enabled: !!id,
+    },
+  ]);
+
+  const { data: staffData, isLoading: staffLoading } = staff;
+  const { data: metricData, isLoading: metricLoading } = metric;
+  const {
+    data: taskData,
+    isLoading: taskLoading,
+    isFetching: taskFetching,
+  } = task;
+
+  console.log(taskData);
+
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onLimitChange = (_: any, limit: number) => {
+    setLimit(limit);
+  };
 
   return (
     <div>
       <div className="mt-5 flex items-center justify-between">
         <div className="text-right">
-          {format(new Date(), "dd MMMM yyyy, hh:mm a")}
+          {staffLoading ? (
+            <Spin />
+          ) : (
+            format(
+              new Date(staffData?.data?.createdAt),
+              "dd MMMM yyyy, hh:mm a"
+            )
+          )}
         </div>
       </div>
 
@@ -135,20 +139,63 @@ const StaffDetail = () => {
         />
       </div>
 
-      <div className="mt-5 flex items-center justify-between text-xl">
-        Adimora Lord Gerald{" "}
+      <div className="mt-5 flex items-center justify-between text-xl font-bold capitalize">
+        {staffLoading ? (
+          <Spin />
+        ) : (
+          `${staffData?.data?.firstName} ${staffData?.data?.lastName}`
+        )}
       </div>
 
-      <div className="grid md:grid-cols-3 gap-x-4">
-        <div className="rounded-2xl p-3 shadow-md">
-          <Pie {...config} />
-        </div>
-        <div className="rounded-2xl p-3 shadow-md">
-          <Pie {...config} />
-        </div>
-        <div className="rounded-2xl p-3 shadow-md">
-          <Pie {...config} />
-        </div>
+      <div
+        className={`flex gap-x-4 w-full overflow-auto ${
+          metricLoading ? "justify-center items-center" : ""
+        }`}
+      >
+        {metricLoading ? (
+          <Spin />
+        ) : (
+          metricData?.data &&
+          Object.keys(metricData?.data).map((item, i: number) => (
+            <div className="rounded-2xl p-3 shadow-md" key={i}>
+              <DonutChart
+                data={[
+                  { type: "success", value: metricData?.data[item] },
+                  {
+                    type: "failure",
+                    value: 100 - metricData?.data[item],
+                  },
+                ]}
+                color={["#52C93F", "#C8C6CD"]}
+              />
+              {metricLoading ? (
+                <Spin />
+              ) : (
+                <div className="flex items-center justify-evenly">
+                  <p className="capitalize text-[#1A1919] text-[16px]">
+                    {swapper(item)}
+                  </p>
+                  <div className="flex gap-2 items-center">
+                    <p className="capitalize text-[#1A1919] text-[16px]">
+                      {Math.round(metricData?.data[item])}%
+                    </p>
+                    <div
+                      className={`${
+                        metricData?.data[item] < 50 && "rotate-180"
+                      }`}
+                    >
+                      <Arrow
+                        fill={
+                          metricData?.data[item] < 50 ? "#F46036" : "#52C93F"
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
 
       <div className="mt-10 mb-20 overflow-x-auto">
@@ -156,10 +203,19 @@ const StaffDetail = () => {
         <Table
           size="small"
           columns={columns}
-          dataSource={[]}
-          // loading={isLoading || isFetching }
+          dataSource={taskData?.data?.tasks}
+          loading={taskLoading || taskFetching}
           rowKey={(record: { id: string }) => record?.id}
           style={{ marginTop: "20px" }}
+          pagination={{
+            position: ["bottomRight"],
+            current: page,
+            total: taskData?.data?.count,
+            pageSize: limit,
+            showSizeChanger: true,
+            onShowSizeChange: onLimitChange,
+            onChange: onPageChange,
+          }}
         />
       </div>
 
