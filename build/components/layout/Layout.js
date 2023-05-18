@@ -1,18 +1,16 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import "./layout.css";
-import { Dropdown } from 'antd';
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import Sidebar from '../sidebar/Sidebar';
-import BottomNav from '../bottomnav/BottomNav';
-import ProfileIcon from '../../assets/svg/ProfileIcon';
-import ChangePasswordModal from '../otherComponents/ChangePasswordModal';
-const firstName = localStorage.getItem('firstName');
-const lastName = localStorage.getItem('lastName');
+import { Dropdown } from "antd";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import Sidebar from "../sidebar/Sidebar";
+import BottomNav from "../bottomnav/BottomNav";
+import ProfileIcon from "../../assets/svg/ProfileIcon";
+import ChangePasswordModal from "../otherComponents/ChangePasswordModal";
 const Layout = () => {
+    const lastName = localStorage.getItem("lastName");
+    const firstName = localStorage.getItem("firstName");
     const [open, setOpen] = useState(false);
-    const user = localStorage.getItem("admin") &&
-        JSON.parse(localStorage.getItem("admin"));
     const show = () => setOpen(true);
     const close = () => setOpen(false);
     return (_jsxs("div", { children: [open ? _jsx(ChangePasswordModal, { ...{ open }, ...{ close } }) : null, _jsxs("section", { className: ` bg-[#FAFDFF]`, children: [_jsx(Sidebar, {}), _jsx("div", { className: `layout__content ${"open" ? "sm:pl-60" : "sm:pl-20"} `, children: _jsxs("div", { className: `layout__content-main p-5`, children: [_jsx("div", { className: "flex items-center justify-end mb-3", children: _jsxs("div", { className: "flex gap-2", children: [_jsx(Dropdown, { overlayClassName: "w-[200px]", trigger: ["click"], menu: {

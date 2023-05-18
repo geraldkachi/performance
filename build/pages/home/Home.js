@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from "react";
 import { format } from "date-fns";
-import { Table, Modal } from "antd";
+import { Table, Modal, Spin } from "antd";
 import Chart from "react-apexcharts";
 import { useQuery } from "react-query";
 import Button from "../../components/button/Button";
@@ -157,7 +157,7 @@ const Home = () => {
     const onLimitChange = (limit) => {
         setLimit(limit);
     };
-    return (_jsxs("div", { children: [_jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("div", { className: "text-right", children: format(new Date(), "dd MMMM yyyy, hh:mm a") }) }), _jsxs("div", { className: "mt-5 flex items-center justify-between", children: [_jsx("p", { className: " text-3xl bg-[##141C1F]", children: "Performance Metric" }), _jsx(Button, { className: "cursor-pointer text-center rounded-lg mt-5", title: "Assign Task", onClick: () => setStateNewTask(true) })] }), _jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx(Button, { variant: "outline", className: "cursor-pointer hover:bg-[#f6fafa] px-14 py-4 my-5 rounded-lg bg-[#ffffff] text-[#2B8572] border border-[#2B8572]", type: "submit", title: "Add New Staff", onClick: () => setStateNewStaff(true) }) }), _jsx(Chart, { options: state.options, series: state.series, type: "bar", width: "100%", height: "40%" }), _jsx("div", { className: "mt-10 mb-20  overflow-x-auto", children: _jsx(Table, { rowClassName: (_record, index) => (index % 2 !== 0 ? "stripe" : ""), size: "small", rowKey: (record) => record?.id, loading: isLoading || isFetching, columns: columns, dataSource: data?.data, pagination: {
+    return (_jsxs("div", { children: [_jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("div", { className: "text-right", children: format(new Date(), "dd MMMM yyyy, hh:mm a") }) }), _jsxs("div", { className: "mt-5 flex items-center justify-between", children: [_jsx("p", { className: " text-3xl bg-[##141C1F]", children: "Performance Metric" }), _jsx(Button, { className: "cursor-pointer text-center rounded-lg mt-5", title: "Assign Task", onClick: () => setStateNewTask(true) })] }), _jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx(Button, { variant: "outline", className: "cursor-pointer hover:bg-[#f6fafa] px-14 py-4 my-5 rounded-lg bg-[#ffffff] text-[#2B8572] border border-[#2B8572]", type: "submit", title: "Add New Staff", onClick: () => setStateNewStaff(true) }) }), isLoadingOverall ? (_jsx("div", { className: "grid place-items-center", children: _jsx(Spin, {}) })) : (_jsx(Chart, { options: state.options, series: state.series, type: "bar", width: "100%", height: "40%" })), _jsx("div", { className: "mt-10 mb-20  overflow-x-auto", children: _jsx(Table, { rowClassName: (_record, index) => (index % 2 !== 0 ? "stripe" : ""), size: "small", rowKey: (record) => record?.id, loading: isLoading || isFetching, columns: columns, dataSource: data?.data, pagination: {
                         position: ["bottomRight"],
                         current: page,
                         total: data?.data?.count,

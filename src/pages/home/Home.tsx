@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { Table, Modal } from "antd";
+import { Table, Modal, Spin } from "antd";
 import Chart from "react-apexcharts";
 import { useQuery } from "react-query";
 
@@ -242,13 +242,19 @@ const Home = () => {
         />
       </div>
 
-      <Chart
-        options={state.options}
-        series={state.series}
-        type="bar"
-        width="100%"
-        height={"40%"}
-      />
+      {isLoadingOverall ? (
+        <div className="grid place-items-center">
+          <Spin />
+        </div>
+      ) : (
+        <Chart
+          options={state.options}
+          series={state.series}
+          type="bar"
+          width="100%"
+          height={"40%"}
+        />
+      )}
 
       <div className="mt-10 mb-20  overflow-x-auto">
         <Table
