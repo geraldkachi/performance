@@ -72,7 +72,7 @@ const Sidebar = () => {
                 key={index}
                 className={`${activeItem && "bg-[#2B8572] rounded-[4px]"} ${
                   activeItem ? "text-white" : "text-[#716C81]"
-                } hover:text-[#2B8572] flex items-center rounded-md p-2 cursor-pointer my-4 text-base space-x-3`}
+                } hover:text-[#ebe5e5] flex items-center rounded-md p-2 cursor-pointer my-4 text-base space-x-3`}
               >
                 <div key={index}> {iconArr[index]}</div>
 

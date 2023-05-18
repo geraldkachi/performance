@@ -75,7 +75,7 @@ const StandUpDetailEnd = () => {
     <div>
       <div className="mt-5 flex items-center justify-between">
         <div className="text-right">
-          {format(new Date(), "dd MMMM yyyy, hh:mm a")}
+          {format(new Date(data?.data?.createdAt), "dd MMMM yyyy, hh:mm a")}
         </div>
       </div>
 
@@ -96,7 +96,7 @@ const StandUpDetailEnd = () => {
           <div className="mt-5 flex items-center">
             <p className=" text-3xl bg-[##141C1F]">
               {data?.data?.endTime === null
-                ? "Meeting ongoing"
+                ? "Meeting Ongoing"
                 : "Meeting Ended"}
             </p>
           </div>

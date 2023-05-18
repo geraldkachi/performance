@@ -21,20 +21,21 @@ import StandUpDetailEnd from "./pages/standUp-detail/StandUpDetailEnd";
 import Statistics from "./pages/statistics/Statistics";
 
 const App: React.FC = () => {
-  const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
+  // const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
 
   const ref = useRef<QueryClient>();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-        refetchOnReconnect: false,
-        retry: false,
-        staleTime: twentyFourHoursInMs,
-      },
-    },
-  });
+  const queryClient = new QueryClient();
+  //   {
+  //   defaultOptions: {
+  //     queries: {
+  //       refetchOnWindowFocus: false,
+  //       refetchOnMount: false,
+  //       refetchOnReconnect: false,
+  //       retry: false,
+  //       staleTime: twentyFourHoursInMs,
+  //     },
+  //   },
+  // }
   ref.current = queryClient;
 
   return (
