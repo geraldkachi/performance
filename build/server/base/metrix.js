@@ -39,3 +39,11 @@ export const createMetrics = async (payload) => {
     });
     return data;
 };
+export const getStaffMetric = async (id) => {
+    const { data } = await instance()
+        .get(`/metric/stats/${id}`)
+        .catch((e) => {
+        return next(e);
+    });
+    return data;
+};

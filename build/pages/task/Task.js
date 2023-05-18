@@ -1,14 +1,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { format } from "date-fns";
-import { Table, Modal } from "antd";
-import { toast } from "react-toastify";
+import { Table, Modal, Tag } from "antd";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useMutation, useQuery } from "react-query";
 import { Button, NewStaff, NewTask } from "../../components";
 import { getTaskById, getTasks } from "../../server/base/task";
 const Task = () => {
-    const { id } = useParams();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [stateNewTask, setStateNewTask] = useState(false);
@@ -16,35 +14,32 @@ const Task = () => {
     const columns = [
         {
             title: "Task",
-            // dataIndex: 'name',
+            dataIndex: "name",
             width: "10%",
             align: "center",
-            render: (val) => (_jsxs("div", { className: " flex items-center", children: [_jsx("span", { className: "bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2" }), _jsx("span", { className: "capitalize whitespace-nowrap", children: `${val?.dataValues?.name}` })] })),
+            render: (val) => (_jsx("div", { className: " flex items-center", children: _jsx("span", { className: "capitalize whitespace-nowrap", children: `${val}` }) })),
         },
-        // {
-        //   title: 'Staff Id',
-        //   // dataIndex: 'staffId',
-        //   width: '10%',
-        //   align: 'center',
-        //   render: (val: any) => (
-        //     <span className="capitalize whitespace-nowrap">{`${val?.staffId}`}</span>
-        //   )
-        // },
         {
             title: "AssignedBy Id",
-            // dataIndex: 'staffId',
             width: "10%",
             align: "center",
             render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap", children: `${val?.assignedBy}` })),
         },
         {
-            title: "Task ID",
-            // dataIndex: 'id',
+            title: "Start Date",
             width: "5%",
-            // align: 'start',
-            render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap text-start cursor-pointer", onClick: () => 
-                // navigate(`/task/${val?.id}`)
-                null, children: `${val?.dataValues?.id}` })),
+            render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap text-start cursor-pointer", children: `${format(new Date(val?.startDate), "MM/dd/yyyy - h:mma")}` })),
+        },
+        {
+            title: "End Date",
+            width: "5%",
+            render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap text-start cursor-pointer", children: `${format(new Date(val.endDate), "MM/dd/yyyy - h:mma")}` })),
+        },
+        {
+            title: "Status",
+            width: "5%",
+            dataIndex: "status",
+            render: (val) => (_jsx(Tag, { color: val === "not-started" ? "red" : val === "ongoing" ? "blue" : "green", children: val })),
         },
     ];
     const { mutate: toDelete, isLoading: deleteLoading } = useMutation(getTaskById, {

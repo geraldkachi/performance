@@ -1,15 +1,15 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useQuery } from "react-query";
-import { getStatistic } from "../../server/base/statistics";
+import { getStatistics } from "../../server/base/statistics";
 import { Table } from "antd";
 const Statistics = () => {
     // const { data, isLoading } = useQuery(getStatistic)
-    const { data, isLoading, isFetching } = useQuery("getStatistic", () => getStatistic());
-    console.log(data, 'data');
+    const { data, isLoading, isFetching } = useQuery("getStatistic", () => getStatistics());
+    console.log(data, "data");
     const columns = [
         {
-            title: 'Staff Name',
-            width: '10%',
+            title: "Staff Name",
+            width: "10%",
             render: (val) => (_jsx("div", { className: " flex items-center", children: _jsx("span", { className: "capitalize whitespace-nowrap", children: `${val?.staffId}` }) })),
         },
         // {
@@ -28,10 +28,10 @@ const Statistics = () => {
                     // showSizeChanger: true,
                     // onShowSizeChange: onLimitChange,
                     // onChange: onPageChange,
-                }, rowKey: (record) => record?.id, style: { marginTop: '20px' }, onRow: (val) => ({
+                }, rowKey: (record) => record?.id, style: { marginTop: "20px" }, onRow: (val) => ({
                     onClick: () => {
                         // navigate(`/stand-up/${val?.id}`)
-                    }
+                    },
                 }) }) }) }));
 };
 export default Statistics;

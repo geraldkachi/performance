@@ -21,14 +21,12 @@ export const instance = () => {
     return instanceHttp;
 };
 export const next = (e) => {
-    if (e?.response?.data?.message === "jwt expired") {
+    if (e?.response?.data?.message?.toLowerCase() === "jwt expired") {
         toast.info("Your session has expired, logging you out!");
         setTimeout(() => {
-            window.location.replace("/");
             localStorage.clear();
+            window.location.replace("/");
         }, 3000);
     }
-    throw new Error(e.response
-        ? e.response.data.message || e?.message
-        : "Poor internet, please try again");
+    throw new Error(e.response ? e.response.data.message : "Poor internet, please try again");
 };

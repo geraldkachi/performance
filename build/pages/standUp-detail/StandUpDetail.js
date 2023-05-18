@@ -31,7 +31,6 @@ const StandUpDetail = () => {
         schema.validate(values).then(() => {
             mutation.mutate(values, {
                 onSuccess: (data) => {
-                    console.log(data?.data, "validated successfully standup created");
                     localStorage.setItem("standupId", data?.data?.id);
                     toast.success(data?.message);
                     values = { title: "", participants: [] };
@@ -45,11 +44,6 @@ const StandUpDetail = () => {
             });
         });
     };
-    const rolesOption = [
-        { label: "Admin", value: "admin" },
-        { label: "Sub Admin", value: "sub-admin" },
-        { label: "Super Admin", value: "super-admin" },
-    ];
     return (_jsxs("div", { children: [_jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("div", { className: "text-right", children: format(new Date(), "dd MMMM yyyy, hh:mm a") }) }), _jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("p", { className: " text-3xl bg-[##141C1F] mt-20 sm:text-4xl", children: "Start Meeting" }) }), _jsx("div", { className: "grid sm:grid-cols-2 mb-20", children: _jsxs("form", { onSubmit: onFinish, children: [_jsx(Input, { ref: formInput, label: "Title", name: "title", type: "text", placeholder: "Enter meeting title" }), _jsxs("div", { className: "mt-5", children: [_jsx("div", { className: "", children: _jsx("label", { className: "my-1 text-black flex items-center text-left text-sm font-semibold mt-1", children: "Participation" }) }), _jsx(Select, { placeholder: "Select Participation", style: { width: "100%" }, mode: "multiple", size: "large", allowClear: true, loading: isLoading || isFetching, value: state, onChange: (e) => {
                                         setState(e);
                                     }, options: data &&

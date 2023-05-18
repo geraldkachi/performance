@@ -42,7 +42,7 @@ const Sidebar = () => {
                                 _jsx(HistoryIcon, { index: activeItem }, 3),
                                 _jsx(StandUpIcon, { index: activeItem }, 5),
                             ];
-                            return (_jsxs(Link, { to: item.route, className: `${activeItem && "bg-[#2B8572] rounded-[4px]"} ${activeItem ? "text-white" : "text-[#716C81]"} hover:text-[#ebe5e5] flex items-center rounded-md p-2 cursor-pointer my-4 text-base space-x-3`, children: [_jsxs("div", { children: [" ", iconArr[index]] }, index), _jsx("span", { className: ` origin-left duration-200`, children: item.title })] }, index));
+                            return (_jsxs(Link, { to: item.route, className: `${activeItem && "bg-[#2B8572] rounded-[4px]"} ${activeItem ? "text-white" : "text-[#716C81]"} hover:text-[#2B8572] flex items-center rounded-md p-2 cursor-pointer my-4 text-base space-x-3`, children: [_jsxs("div", { children: [" ", iconArr[index]] }, index), _jsx("span", { className: ` origin-left duration-200`, children: item.title })] }, index));
                         })] }), _jsx("div", { className: "flex items-center justify-start bg-[#E8E9F2] p-2 rounded-[4px] cursor-pointer", onClick: logout, children: _jsxs("div", { className: "flex items-center  gap-5", children: [_jsx(LogoutIcon, {}), _jsx("div", { className: `text-red-600 text-sm`, children: " Logout" })] }) })] }) }));
 };
 export default Sidebar;

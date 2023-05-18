@@ -53,6 +53,8 @@ const Metric = ({ setStateMetric, participantId }) => {
     const { mutate, isLoading } = useMutation(data?.data ? updateMetrics : createMetrics, {
         onSuccess: (res) => {
             toast.success(res?.message);
+            queryClient.invalidateQueries(`metric-${participantId}`);
+            setStateMetric((prev) => !prev);
         },
         onError: (e) => {
             toast?.error(e?.message);
@@ -85,17 +87,6 @@ const Metric = ({ setStateMetric, participantId }) => {
             mutate({
                 ...values,
                 ...(data?.data && { id: data.data.id }),
-            }, {
-                onSuccess: (data) => {
-                    toast.success(data?.message);
-                    queryClient.invalidateQueries(`metric-${participantId}`);
-                    setStateMetric((prev) => !prev);
-                },
-                onError: (e) => {
-                    if (e instanceof Error) {
-                        toast.error(e.message);
-                    }
-                },
             });
         });
     };

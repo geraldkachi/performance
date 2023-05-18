@@ -3,9 +3,11 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { useQuery } from "react-query";
 import { Table, Modal, Tag } from "antd";
+import { useNavigate } from "react-router";
 import { getStaffs } from "../../server/base";
 import { Button, NewStaff, NewTask } from "../../components";
 const Staff = () => {
+    const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [stateNewTask, setStateNewTask] = useState(false);
@@ -51,6 +53,10 @@ const Staff = () => {
                         showSizeChanger: true,
                         onShowSizeChange: onLimitChange,
                         onChange: onPageChange,
-                    }, style: { marginTop: "20px" } }) }), _jsx(Modal, { open: stateNewTask, onCancel: () => setStateNewTask(false), footer: null, maskClosable: false, children: _jsx(NewTask, { ...{ setStateNewTask } }) }), _jsx(Modal, { open: stateNewStaff, onCancel: () => setStateNewStaff(false), footer: null, maskClosable: false, children: _jsx(NewStaff, { ...{ setStateNewStaff } }) })] }));
+                    }, rowClassName: "cursor-pointer", onRow: (val) => ({
+                        onClick: () => {
+                            navigate(`/staff/${val?.id}`);
+                        },
+                    }), style: { marginTop: "20px" } }) }), _jsx(Modal, { open: stateNewTask, onCancel: () => setStateNewTask(false), footer: null, maskClosable: false, children: _jsx(NewTask, { ...{ setStateNewTask } }) }), _jsx(Modal, { open: stateNewStaff, onCancel: () => setStateNewStaff(false), footer: null, maskClosable: false, children: _jsx(NewStaff, { ...{ setStateNewStaff } }) })] }));
 };
 export default Staff;

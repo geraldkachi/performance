@@ -1,7 +1,7 @@
 import { instance, next } from "./base";
-export const getTasks = async (page, limit) => {
+export const getTasks = async (page, limit, staffId) => {
     const { data } = await instance()
-        .get(`/task?page=${page}&limit=${limit}`)
+        .get(`/task?page=${page}&limit=${limit}${staffId ? `&staffId=${staffId}` : ``}`)
         .catch((e) => {
         return next(e);
     });

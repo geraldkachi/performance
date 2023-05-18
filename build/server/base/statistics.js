@@ -1,7 +1,7 @@
 import { instance, next } from "./base";
-export const getStatistic = async () => {
+export const getStatistics = async (id) => {
     const { data } = await instance()
-        .get(`/statistic`)
+        .get(`/statistic${id ? `?staffId=${id}` : ``}`)
         .catch((e) => {
         return next(e);
     });

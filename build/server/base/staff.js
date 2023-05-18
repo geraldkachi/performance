@@ -23,3 +23,11 @@ export const changePassword = async (payload) => {
     });
     return data;
 };
+export const getStaff = async (id) => {
+    const { data } = await instance()
+        .get(`/staff/single/${id}`)
+        .catch((e) => {
+        return next(e);
+    });
+    return data;
+};

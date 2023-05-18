@@ -1,106 +1,97 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { format } from "date-fns";
 import { useState } from "react";
-import { Table, Modal } from "antd";
-import { Pie } from "@ant-design/plots";
+import { format } from "date-fns";
+import { useQueries } from "react-query";
+import { useParams } from "react-router";
+import { Table, Modal, Spin, Tag } from "antd";
+import Arrow from "../../assets/svg/Arrow";
+import { getStaff } from "../../server/base";
+import DonutChart from "../../components/Pie";
+import { getTasks } from "../../server/base/task";
 import { Button, NewTask } from "../../components";
-const pieChartData = [
-    // {
-    //   type: "new",
-    //   value: 40
-    // },
-    // {
-    //   type: "evaluating",
-    //   value: 25
-    // },
-    {
-        type: "ongoing",
-        value: 22,
-    },
-    {
-        type: "Task Rate",
-        value: 22,
-    },
-    // {
-    //   type: "archived",
-    //   value: 10
-    // }
-];
-const config = {
-    width: 100,
-    height: 300,
-    appendPadding: 0,
-    data: pieChartData,
-    angleField: "value",
-    colorField: "type",
-    radius: 1,
-    innerRadius: 0.5,
-    color: ["#ffffff", "#52C93F"],
-    border: 1,
-    label: {
-        type: "inner",
-        offset: "-50%",
-        content: "{value}",
-        style: {
-            textAlign: "center",
-            fontSize: 10,
-        },
-    },
-    interactions: [{ type: "element-selected" }, { type: "element-active" }],
-    statistic: {
-        title: false,
-        content: {
-            style: {
-                whiteSpace: "pre-wrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-            },
-            formatter: function formatter() {
-                return `total\n134`;
-            },
-        },
-    },
-};
+import { getStaffMetric } from "../../server/base/metrix";
 const columns = [
     {
-        title: "Staff Name",
+        title: "Task",
         dataIndex: "name",
         width: "10%",
         align: "center",
+        render: (val) => (_jsx("div", { className: " flex items-center", children: _jsx("span", { className: "capitalize whitespace-nowrap", children: `${val}` }) })),
     },
     {
-        title: "Email Address",
-        dataIndex: "email",
+        title: "AssignedBy Id",
         width: "10%",
         align: "center",
+        render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap", children: `${val?.assignedBy}` })),
     },
     {
-        title: "Role",
-        dataIndex: "role",
-        width: "20%",
-        align: "center",
-    },
-    {
-        title: "Tasks",
-        dataIndex: "task",
+        title: "Start Date",
         width: "5%",
-        align: "center",
+        render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap text-start cursor-pointer", children: `${format(new Date(val?.startDate), "MM/dd/yyyy - h:mma")}` })),
+    },
+    {
+        title: "End Date",
+        width: "5%",
+        render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap text-start cursor-pointer", children: `${format(new Date(val.endDate), "MM/dd/yyyy - h:mma")}` })),
     },
     {
         title: "Status",
+        width: "5%",
         dataIndex: "status",
-        width: "12%",
-        align: "center",
+        render: (val) => (_jsx(Tag, { color: val === "not-started" ? "red" : val === "ongoing" ? "blue" : "green", children: val })),
     },
 ];
+const swapper = (val) => {
+    const words = val?.split(/(?=[A-Z])/);
+    return words?.join(" ");
+};
 const StaffDetail = () => {
-    // const {id} = useParams()
+    const { id } = useParams();
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
     const [stateNewTask, setStateNewTask] = useState(false);
-    // const { data, isLoading, isFetching } = useQuery(["getTaskById", id], () => getTaskById(id), { keepPreviousData: true })
-    // console.log(data, 'getTaskById')
-    // console.log(id, 'id params')
-    return (_jsxs("div", { children: [_jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("div", { className: "text-right", children: format(new Date(), "dd MMMM yyyy, hh:mm a") }) }), _jsxs("div", { className: "mt-5 flex items-center justify-between", children: [_jsx("p", { className: " text-3xl bg-[##141C1F]", children: "Staff" }), _jsx(Button, { className: "text-center rounded-lg mt-5", title: "Assign Task", onClick: () => setStateNewTask(true) })] }), _jsxs("div", { className: "mt-5 flex items-center justify-between text-xl", children: ["Adimora Lord Gerald", " "] }), _jsxs("div", { className: "grid md:grid-cols-3 gap-x-4", children: [_jsx("div", { className: "rounded-2xl p-3 shadow-md", children: _jsx(Pie, { ...config }) }), _jsx("div", { className: "rounded-2xl p-3 shadow-md", children: _jsx(Pie, { ...config }) }), _jsx("div", { className: "rounded-2xl p-3 shadow-md", children: _jsx(Pie, { ...config }) })] }), _jsxs("div", { className: "mt-10 mb-20 overflow-x-auto", children: [_jsx("div", { className: "flex items-center text-2xl mt-3", children: "Recent Tasks" }), _jsx(Table, { size: "small", columns: columns, dataSource: [], 
-                        // loading={isLoading || isFetching }
-                        rowKey: (record) => record?.id, style: { marginTop: "20px" } })] }), _jsx(Modal, { open: stateNewTask, onCancel: () => setStateNewTask(false), footer: null, maskClosable: false, children: _jsx(NewTask, { ...{ setStateNewTask } }) })] }));
+    const [staff, metric, task] = useQueries([
+        {
+            queryKey: `staff-${id}`,
+            queryFn: () => getStaff(id),
+            enabled: !!id,
+        },
+        {
+            queryKey: `staff-metric-${id}`,
+            queryFn: () => getStaffMetric(id),
+            enabled: !!id,
+        },
+        {
+            queryKey: ["taskApi", page, limit, id],
+            queryFn: () => getTasks(page, limit, id),
+            enabled: !!id,
+        },
+    ]);
+    const { data: staffData, isLoading: staffLoading } = staff;
+    const { data: metricData, isLoading: metricLoading } = metric;
+    const { data: taskData, isLoading: taskLoading, isFetching: taskFetching, } = task;
+    console.log(taskData);
+    const onPageChange = (page) => {
+        setPage(page);
+    };
+    const onLimitChange = (_, limit) => {
+        setLimit(limit);
+    };
+    return (_jsxs("div", { children: [_jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("div", { className: "text-right", children: staffLoading ? (_jsx(Spin, {})) : (format(new Date(staffData?.data?.createdAt), "dd MMMM yyyy, hh:mm a")) }) }), _jsxs("div", { className: "mt-5 flex items-center justify-between", children: [_jsx("p", { className: " text-3xl bg-[##141C1F]", children: "Staff" }), _jsx(Button, { className: "text-center rounded-lg mt-5", title: "Assign Task", onClick: () => setStateNewTask(true) })] }), _jsx("div", { className: "mt-5 flex items-center justify-between text-xl font-bold capitalize", children: staffLoading ? (_jsx(Spin, {})) : (`${staffData?.data?.firstName} ${staffData?.data?.lastName}`) }), _jsx("div", { className: `flex gap-x-4 w-full overflow-auto ${metricLoading ? "justify-center items-center" : ""}`, children: metricLoading ? (_jsx(Spin, {})) : (metricData?.data &&
+                    Object.keys(metricData?.data).map((item, i) => (_jsxs("div", { className: "rounded-2xl p-3 shadow-md", children: [_jsx(DonutChart, { data: [
+                                    { type: "success", value: metricData?.data[item] },
+                                    {
+                                        type: "failure",
+                                        value: 100 - metricData?.data[item],
+                                    },
+                                ], color: ["#52C93F", "#C8C6CD"] }), metricLoading ? (_jsx(Spin, {})) : (_jsxs("div", { className: "flex items-center justify-evenly", children: [_jsx("p", { className: "capitalize text-[#1A1919] text-[16px]", children: swapper(item) }), _jsxs("div", { className: "flex gap-2 items-center", children: [_jsxs("p", { className: "capitalize text-[#1A1919] text-[16px]", children: [Math.round(metricData?.data[item]), "%"] }), _jsx("div", { className: `${metricData?.data[item] < 50 && "rotate-180"}`, children: _jsx(Arrow, { fill: metricData?.data[item] < 50 ? "#F46036" : "#52C93F" }) })] })] }))] }, i)))) }), _jsxs("div", { className: "mt-10 mb-20 overflow-x-auto", children: [_jsx("div", { className: "flex items-center text-2xl mt-3", children: "Recent Tasks" }), _jsx(Table, { size: "small", columns: columns, dataSource: taskData?.data?.tasks, loading: taskLoading || taskFetching, rowKey: (record) => record?.id, style: { marginTop: "20px" }, pagination: {
+                            position: ["bottomRight"],
+                            current: page,
+                            total: taskData?.data?.count,
+                            pageSize: limit,
+                            showSizeChanger: true,
+                            onShowSizeChange: onLimitChange,
+                            onChange: onPageChange,
+                        } })] }), _jsx(Modal, { open: stateNewTask, onCancel: () => setStateNewTask(false), footer: null, maskClosable: false, children: _jsx(NewTask, { ...{ setStateNewTask } }) })] }));
 };
 export default StaffDetail;
