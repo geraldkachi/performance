@@ -1,12 +1,13 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-// import useAuth from '../hooks/useAuth';
-const token = localStorage.getItem('token')
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const ProtectedRoutes = () => {
-  // const token = useAuth((state) => state.token);
-  const location = useLocation()
-  return (token ? <Outlet /> : <Navigate to="/" state={{ from: location }} replace />)
+  const token = localStorage.getItem("token");
+  const location = useLocation();
+  return token ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" state={{ from: location }} replace />
+  );
+};
 
-}
-
-export default ProtectedRoutes
+export default ProtectedRoutes;
