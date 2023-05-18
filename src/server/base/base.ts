@@ -28,16 +28,14 @@ export const instance = () => {
 };
 
 export const next = (e: AxiosError | any) => {
-  if (e?.response?.data?.message === "jwt expired") {
+  if (e?.response?.data?.message?.toLowerCase() === "jwt expired") {
     toast.info("Your session has expired, logging you out!");
     setTimeout(() => {
-      window.location.replace("/");
       localStorage.clear();
+      window.location.replace("/");
     }, 3000);
   }
   throw new Error(
-    e.response
-      ? e.response.data.message || e?.message
-      : "Poor internet, please try again"
+    e.response ? e.response.data.message : "Poor internet, please try again"
   );
 };

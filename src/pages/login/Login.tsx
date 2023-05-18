@@ -1,12 +1,11 @@
-import { FormEvent, useRef, useState } from "react";
+import * as yup from "yup";
+import { toast } from "react-toastify";
 import { useMutation } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { FormEvent, useRef, useState } from "react";
 import { Button } from "../../components";
 import Input from "../../components/input/Input";
-import PasswordMe from "../../components/otherComponents/PasswordMe";
 import { login, verifyOtp } from "../../server/base";
-import { toast } from "react-toastify";
-import * as yup from "yup";
 
 let schema = yup.object().shape({
   email: yup.string(),
@@ -27,7 +26,6 @@ const Login = () => {
 
   const mutation = useMutation(login, {
     onSuccess: (res) => {
-      console.log(res, "res");
       setId(res?.data?.id);
       setIsOtp(true);
     },
@@ -68,13 +66,7 @@ const Login = () => {
       .validate(values)
       .then((_val) => {
         //@ts-ignore
-        mutation.mutate(values, {
-          onError: (e: unknown) => {
-            if (e instanceof Error) {
-              toast.error(e.message);
-            }
-          },
-        });
+        mutation.mutate(values);
       })
       .catch((e) => {
         toast.error(e.message);
@@ -156,11 +148,11 @@ const Login = () => {
                 // )}
               />
 
-              <div className="mb-3 userInput">
+              {/* <div className="mb-3 userInput">
                 <Link to="/reset" className="text-[#FF5A5A] font-bold text-sm">
                   Reset Passsword
                 </Link>
-              </div>
+              </div> */}
 
               <div className="flex items-center mt-10">
                 <Button

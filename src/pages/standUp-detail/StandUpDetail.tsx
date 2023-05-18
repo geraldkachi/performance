@@ -43,7 +43,6 @@ const StandUpDetail = () => {
     schema.validate(values).then(() => {
       mutation.mutate(values, {
         onSuccess: (data) => {
-          console.log(data?.data, "validated successfully standup created");
           localStorage.setItem("standupId", data?.data?.id);
           toast.success(data?.message);
           values = { title: "", participants: [] };
@@ -57,12 +56,6 @@ const StandUpDetail = () => {
       });
     });
   };
-
-  const rolesOption = [
-    { label: "Admin", value: "admin" },
-    { label: "Sub Admin", value: "sub-admin" },
-    { label: "Super Admin", value: "super-admin" },
-  ];
 
   return (
     <div>

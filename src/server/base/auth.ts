@@ -13,7 +13,7 @@ export const login = async (payload: {
   return data;
 };
 
-export const verifyOtp = async (payload?: { otp: string, id: string },  id?: string | number) => {
+export const verifyOtp = async (payload: { otp: string; id: string }) => {
   const { data } = await instance()
     .post(`/staff/verify-otp/${payload?.id}`, payload)
     .catch((e) => {

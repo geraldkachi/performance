@@ -78,6 +78,8 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
     {
       onSuccess: (res) => {
         toast.success(res?.message);
+        queryClient.invalidateQueries(`metric-${participantId}`);
+        setStateMetric((prev) => !prev);
       },
       onError: (e: Error) => {
         toast?.error(e?.message);
@@ -113,24 +115,10 @@ const Metric = ({ setStateMetric, participantId }: Props) => {
     console.log(values, "values");
 
     schema.validate(values).then(() => {
-      mutate(
-        {
-          ...values,
-          ...(data?.data && { id: data.data.id }),
-        },
-        {
-          onSuccess: (data) => {
-            toast.success(data?.message);
-            queryClient.invalidateQueries(`metric-${participantId}`);
-            setStateMetric((prev) => !prev);
-          },
-          onError: (e: unknown) => {
-            if (e instanceof Error) {
-              toast.error(e.message);
-            }
-          },
-        }
-      );
+      mutate({
+        ...values,
+        ...(data?.data && { id: data.data.id }),
+      });
     });
   };
 
