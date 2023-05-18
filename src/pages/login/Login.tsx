@@ -133,7 +133,6 @@ const Login = () => {
                 name="email"
                 placeholder="Email"
               />
-
               <Input
                 label="Password"
                 ref={formInput}
@@ -148,12 +147,12 @@ const Login = () => {
                 // )}
               />
 
+              {/* TODO: */}
               {/* <div className="mb-3 userInput">
                 <Link to="/reset" className="text-[#FF5A5A] font-bold text-sm">
                   Reset Passsword
                 </Link>
               </div> */}
-
               <div className="flex items-center mt-10">
                 <Button
                   className="w-full text-center"
@@ -161,7 +160,6 @@ const Login = () => {
                   loading={mutation?.isLoading}
                   title="Sign In"
                   type="submit"
-                  // onClick={() => navigate('/home')}
                 />
               </div>
             </form>
