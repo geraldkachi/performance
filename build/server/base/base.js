@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import axios from "axios";
 const BACKEND_URL = import.meta.env.VITE_API_KEY;
-const token = localStorage.getItem("token");
 export const instance = () => {
     const instanceHttp = axios.create({
         baseURL: BACKEND_URL,
@@ -13,9 +12,8 @@ export const instance = () => {
     });
     instanceHttp.interceptors.request.use((config) => {
         config.headers = config.headers ?? {};
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
+        //@ts-ignore
+        config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
         return config;
     });
     return instanceHttp;
