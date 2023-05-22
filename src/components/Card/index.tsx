@@ -1,16 +1,20 @@
 import { Spin, Tag } from "antd";
 import { ReactElement } from "react";
 import { useQuery } from "react-query";
-import { getMetric } from "../../server/base/metrix";
 import { useParams } from "react-router-dom";
+import { getMetric } from "../../server/base/metrix";
 
 type Props = {
-  name: string;
+  staff: { name: string; role: string };
   width?: string;
   participantId: string;
 };
 
-const Card = ({ participantId, name, width = "full" }: Props): ReactElement => {
+const Card = ({
+  participantId,
+  staff,
+  width = "full",
+}: Props): ReactElement => {
   const { id: standupId } = useParams();
   const { data, isLoading } = useQuery(
     `metric-${participantId}`,
@@ -28,7 +32,7 @@ const Card = ({ participantId, name, width = "full" }: Props): ReactElement => {
         <Spin />
       ) : (
         <div className="grid gap-4">
-          <div className=" text-green-500">{name}</div>
+          <div className=" text-green-500">{staff?.name}</div>
           {data?.data ? (
             <div className="flex flex-col gap-y-5 lg:flex-row lg:justify-between lg:gap-x-3">
               <div className="grid gap-2">
