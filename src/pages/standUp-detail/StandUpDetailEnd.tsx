@@ -37,8 +37,14 @@ const StandUpDetailEnd = () => {
   const columns: columnsProps[] | any = [
     {
       title: "Staff Name",
-      render: (val: { name: string }) => (
-        <span className="cursor-pointer">{val?.name}</span>
+      render: (val: { staff: { name: string; role: string } }) => (
+        <span className="cursor-pointer">{val?.staff?.name}</span>
+      ),
+    },
+    {
+      title: "Staff Role",
+      render: (val: { staff: { name: string; role: string } }) => (
+        <span className="cursor-pointer">{val?.staff?.role}</span>
       ),
     },
   ];
@@ -71,11 +77,14 @@ const StandUpDetailEnd = () => {
   //     name: record.name,
   //   }),
   // };
+
   return (
     <div>
       <div className="mt-5 flex items-center justify-between">
         <div className="text-right">
-          {format(new Date(data?.data?.createdAt), "dd MMMM yyyy, hh:mm a")}
+          {data?.data?.createdAt
+            ? format(new Date(data?.data?.createdAt), "dd MMMM yyyy, hh:mm a")
+            : ""}
         </div>
       </div>
 
@@ -84,7 +93,9 @@ const StandUpDetailEnd = () => {
           <div></div>
           <div className="mt-10 flex items-end text-left sm:text-3xl text-xl bg-[#141C1F] capitalize">
             End Time:{" "}
-            {format(new Date(data?.data?.endTime), "dd MMMM yyyy, hh:mm a")}
+            {data?.data?.endTime
+              ? format(new Date(data?.data?.endTime), "dd MMMM yyyy, hh:mm a")
+              : ""}
           </div>
         </div>
       )}
@@ -127,21 +138,24 @@ const StandUpDetailEnd = () => {
 
       <div className="mt-10 mb-20 overflow-x-auto">
         <div className="grid gap-4">
-          {data?.data?.participants?.map((i: { name: string; id: string }) => (
-            <div
-              onClick={() => {
-                if (!data?.data?.endTime) {
-                  setParticipantId(i.id);
-                  setStateMetric(true);
-                }
-              }}
-              className={`${
-                !data?.data?.endTime ? "cursor-pointer" : "cursor-not-allowed"
-              }`}
-            >
-              <Card name={i.name} participantId={i.id} key={i.id} />
-            </div>
-          ))}
+          {data?.data?.participants?.map(
+            (i: { staff: { name: string; role: string }; id: string }) => (
+              <div
+                onClick={() => {
+                  if (!data?.data?.endTime) {
+                    setParticipantId(i.id);
+                    setStateMetric(true);
+                  }
+                }}
+                key={i.id}
+                className={`${
+                  !data?.data?.endTime ? "cursor-pointer" : "cursor-not-allowed"
+                }`}
+              >
+                <Card staff={i.staff} participantId={i.id} />
+              </div>
+            )
+          )}
         </div>
 
         <Table
