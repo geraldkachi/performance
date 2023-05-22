@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Button, Card } from "../../components";
 import Metric from "../../components/otherComponents/Metric";
 import { getStandUpOne, endStandUpUpdate } from "../../server/base/standup";
+import { formatRole } from "../../utils/helper";
 const StandUpDetailEnd = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ const StandUpDetailEnd = () => {
         },
         {
             title: "Staff Role",
-            render: (val) => (_jsx("span", { className: "cursor-pointer", children: val?.staff?.role })),
+            render: (val) => (_jsx("span", { className: "cursor-pointer capitalize", children: formatRole(val?.staff?.role) })),
         },
     ];
     const { mutate, isLoading: mutateLoading } = useMutation(endStandUpUpdate, {

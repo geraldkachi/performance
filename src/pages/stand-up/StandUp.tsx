@@ -25,7 +25,7 @@ const columns = [
     ),
   },
   {
-    title: "Creator Id",
+    title: "Creator",
     // dataIndex: 'creator',
     width: "10%",
     // align: 'center',
@@ -34,7 +34,7 @@ const columns = [
     ),
   },
   {
-    title: "Created At",
+    title: "Date Created",
     // dataIndex: 'createdAt',
     width: "20%",
     // align: 'center',

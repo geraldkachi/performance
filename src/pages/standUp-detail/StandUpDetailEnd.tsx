@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Button, Card } from "../../components";
 import Metric from "../../components/otherComponents/Metric";
 import { getStandUpOne, endStandUpUpdate } from "../../server/base/standup";
+import { formatRole } from "../../utils/helper";
 interface columnsProps {
   title: string;
   width: string;
@@ -44,7 +45,9 @@ const StandUpDetailEnd = () => {
     {
       title: "Staff Role",
       render: (val: { staff: { name: string; role: string } }) => (
-        <span className="cursor-pointer">{val?.staff?.role}</span>
+        <span className="cursor-pointer capitalize">
+          {formatRole(val?.staff?.role)}
+        </span>
       ),
     },
   ];

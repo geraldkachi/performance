@@ -10,6 +10,7 @@ import DonutChart from "../../components/Pie";
 import { getTasks } from "../../server/base/task";
 import { Button, NewTask } from "../../components";
 import { getStaffMetric } from "../../server/base/metrix";
+import { swapper } from "../../utils/helper";
 const columns = [
     {
         title: "Task",
@@ -48,10 +49,6 @@ const columns = [
         render: (val) => (_jsx(Tag, { color: val === "not-started" ? "red" : val === "ongoing" ? "blue" : "green", children: val })),
     },
 ];
-const swapper = (val) => {
-    const words = val?.split(/(?=[A-Z])/);
-    return words?.join(" ");
-};
 const StaffDetail = () => {
     const { id } = useParams();
     const [page, setPage] = useState(1);
@@ -77,7 +74,6 @@ const StaffDetail = () => {
     const { data: staffData, isLoading: staffLoading } = staff;
     const { data: metricData, isLoading: metricLoading } = metric;
     const { data: taskData, isLoading: taskLoading, isFetching: taskFetching, } = task;
-    console.log(taskData);
     const onPageChange = (page) => {
         setPage(page);
     };

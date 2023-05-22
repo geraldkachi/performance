@@ -14,14 +14,14 @@ const columns = [
         render: (val) => (_jsxs("div", { className: " flex items-center", children: [_jsx("span", { className: "bg-[#2B8572] w-10 h-10 rounded-full text-center flex items-center justify-center text-white mr-2" }), _jsx("span", { className: "capitalize whitespace-nowrap", children: `${val?.title}` })] })),
     },
     {
-        title: "Creator Id",
+        title: "Creator",
         // dataIndex: 'creator',
         width: "10%",
         // align: 'center',
         render: (val) => (_jsx("span", { className: "capitalize whitespace-nowrap", children: `${val?.creator}` })),
     },
     {
-        title: "Created At",
+        title: "Date Created",
         // dataIndex: 'createdAt',
         width: "20%",
         // align: 'center',

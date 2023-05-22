@@ -3,6 +3,7 @@ import { ReactElement } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { getMetric } from "../../server/base/metrix";
+import { boolFormatter } from "../../utils/helper";
 
 type Props = {
   staff: { name: string; role: string };
@@ -24,8 +25,6 @@ const Card = ({
     }
   );
 
-  const swapper = (val: boolean) => (val ? "Yes" : "No");
-
   return (
     <div className={`rounded-lg bg-white shadow-md p-8 w-[${width}] h-auto`}>
       {isLoading ? (
@@ -39,7 +38,7 @@ const Card = ({
                 <p className="text-[#1C1C1D] font-semibold">Joined Early</p>
                 <p>
                   <Tag color={data?.data.JoinedEarly ? "green" : "red"}>
-                    {swapper(data?.data.JoinedEarly)}
+                    {boolFormatter(data?.data.JoinedEarly)}
                   </Tag>
                 </p>
               </div>
@@ -47,7 +46,7 @@ const Card = ({
                 <p className="text-[#1C1C1D] font-semibold">Attended Meeting</p>
                 <p className="capitalize">
                   <Tag color={data?.data.attendedMeeting ? "green" : "red"}>
-                    {swapper(data?.data.attendedMeeting)}
+                    {boolFormatter(data?.data.attendedMeeting)}
                   </Tag>
                 </p>
               </div>
@@ -57,7 +56,7 @@ const Card = ({
                 </p>
                 <p className="capitalize">
                   <Tag color={data?.data.completedMeeting ? "green" : "red"}>
-                    {swapper(data?.data.completedMeeting)}
+                    {boolFormatter(data?.data.completedMeeting)}
                   </Tag>
                 </p>
               </div>
