@@ -6,6 +6,7 @@ import { FormEvent, useRef, useState } from "react";
 import { Button } from "../../components";
 import Input from "../../components/input/Input";
 import { login, verifyOtp } from "../../server/base";
+import Logo from "../../assets/svg/Logo";
 
 let schema = yup.object().shape({
   email: yup.string(),
@@ -92,24 +93,18 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen my-auto">
-      <div className=" absolute scale- top-[98px] left[-40px]">
-        <img src="" alt="" />
-      </div>
-      <div className="pt-36 bg-gradien flex items-center justify-center my-auto">
+    <div className="h-screen grid place-items-center">
+      <div className="bg-gradien flex items-center justify-center my-auto w-full">
         <div className="text-center logoLogin flex flex-col justify-center items-center absolute top-[13%] md:top-[12%]">
-          <img src="" alt="" />
           {/* <div className='flex items-center gap-5 text-3xl mb-10'>
                         Perfomance Metric
                     </div> */}
         </div>
 
-        <div className="login z-10 p-5 rounded-lg w-full max-w-[23rem]  md:bg-white bg-transparent">
-          <div className="p-[10px]">
-            {/* <span className='text-[#949AB1] text-sm'>Welcome Back,</span>
-                        <h1 className='font-bold'>Admin</h1> */}
+        <div className="login z-10 p-5 rounded-lg w-full max-w-[23rem] md:bg-white bg-transparent">
+          <div className="grid place-items-center">
+            <Logo />
           </div>
-
           <div className="text-center my-4">
             <p className={`${!isOtp ? "text-lg" : "text-md"} text-neutral-500`}>
               {!isOtp ? (
