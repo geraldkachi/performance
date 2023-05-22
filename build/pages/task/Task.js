@@ -20,6 +20,13 @@ const Task = () => {
             render: (val) => (_jsx("div", { className: " flex items-center", children: _jsx("span", { className: "capitalize whitespace-nowrap", children: `${val}` }) })),
         },
         {
+            title: "Dependants",
+            dataIndex: "dependants",
+            width: "10%",
+            align: "center",
+            render: (val) => (_jsx("span", { className: "capitalize", children: val.length > 1 ? `${val[0]} + ${val.length - 1}` : val[0] })),
+        },
+        {
             title: "AssignedBy Id",
             width: "10%",
             align: "center",

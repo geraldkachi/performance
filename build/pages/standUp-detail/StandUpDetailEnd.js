@@ -23,7 +23,11 @@ const StandUpDetailEnd = () => {
     const columns = [
         {
             title: "Staff Name",
-            render: (val) => (_jsx("span", { className: "cursor-pointer", children: val?.name })),
+            render: (val) => (_jsx("span", { className: "cursor-pointer", children: val?.staff?.name })),
+        },
+        {
+            title: "Staff Role",
+            render: (val) => (_jsx("span", { className: "cursor-pointer", children: val?.staff?.role })),
         },
     ];
     const { mutate, isLoading: mutateLoading } = useMutation(endStandUpUpdate, {
@@ -51,7 +55,11 @@ const StandUpDetailEnd = () => {
     //     name: record.name,
     //   }),
     // };
-    return (_jsxs("div", { children: [_jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("div", { className: "text-right", children: format(new Date(data?.data?.createdAt), "dd MMMM yyyy, hh:mm a") }) }), data?.data?.endTime && (_jsxs("div", { className: "mt- flex items-start justify-between  w-full ", children: [_jsx("div", {}), _jsxs("div", { className: "mt-10 flex items-end text-left sm:text-3xl text-xl bg-[#141C1F] capitalize", children: ["End Time:", " ", format(new Date(data?.data?.endTime), "dd MMMM yyyy, hh:mm a")] })] })), isLoading ? (_jsx(Spin, {})) : (_jsxs(_Fragment, { children: [_jsx("div", { className: "mt-5 flex items-center", children: _jsx("p", { className: " text-3xl bg-[##141C1F]", children: data?.data?.endTime === null
+    return (_jsxs("div", { children: [_jsx("div", { className: "mt-5 flex items-center justify-between", children: _jsx("div", { className: "text-right", children: data?.data?.createdAt
+                        ? format(new Date(data?.data?.createdAt), "dd MMMM yyyy, hh:mm a")
+                        : "" }) }), data?.data?.endTime && (_jsxs("div", { className: "mt- flex items-start justify-between  w-full ", children: [_jsx("div", {}), _jsxs("div", { className: "mt-10 flex items-end text-left sm:text-3xl text-xl bg-[#141C1F] capitalize", children: ["End Time:", " ", data?.data?.endTime
+                                ? format(new Date(data?.data?.endTime), "dd MMMM yyyy, hh:mm a")
+                                : ""] })] })), isLoading ? (_jsx(Spin, {})) : (_jsxs(_Fragment, { children: [_jsx("div", { className: "mt-5 flex items-center", children: _jsx("p", { className: " text-3xl bg-[##141C1F]", children: data?.data?.endTime === null
                                 ? "Meeting Ongoing"
                                 : "Meeting Ended" }) }), _jsxs("p", { className: "block mt-3 text-3xl bg-[##141C1F] capitalize", children: ["Title: ", data?.data?.title] }), _jsx("div", { className: "mt-5 flex items-center", children: _jsx(Button, { variant: "primary", loading: mutateLoading, disabled: mutateLoading, className: `${data?.data?.endTime ? "hidden" : "block"} cursor-pointer ml-3 px-14 py-4 my-5 rounded-lg bg-[#E71D36] text-[#ffffff]"`, type: "button", title: "End Stand Up", onClick: () => mutate({
                                 id,
@@ -61,7 +69,7 @@ const StandUpDetailEnd = () => {
                                     setParticipantId(i.id);
                                     setStateMetric(true);
                                 }
-                            }, className: `${!data?.data?.endTime ? "cursor-pointer" : "cursor-not-allowed"}`, children: _jsx(Card, { name: i.name, participantId: i.id }, i.id) }))) }), _jsx(Table, { size: "small", columns: columns, dataSource: data?.data?.participants, loading: isLoading || isFetching, pagination: {
+                            }, className: `${!data?.data?.endTime ? "cursor-pointer" : "cursor-not-allowed"}`, children: _jsx(Card, { staff: i.staff, participantId: i.id }) }, i.id))) }), _jsx(Table, { size: "small", columns: columns, dataSource: data?.data?.participants, loading: isLoading || isFetching, pagination: {
                             current: page,
                             pageSize: limit,
                             showSizeChanger: true,
