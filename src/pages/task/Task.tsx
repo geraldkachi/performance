@@ -27,6 +27,17 @@ const Task = () => {
       ),
     },
     {
+      title: "Dependants",
+      dataIndex: "dependants",
+      width: "10%",
+      align: "center" as AlignType,
+      render: (val: string[]) => (
+        <span className="capitalize">
+          {val.length > 1 ? `${val[0]} + ${val.length - 1}` : val[0]}
+        </span>
+      ),
+    },
+    {
       title: "AssignedBy Id",
       width: "10%",
       align: "center" as AlignType,
